@@ -141,6 +141,11 @@ export const useDeckStore = create<DeckStore>()(
         currentDeck: state.currentDeck,
         savedDecks: state.savedDecks,
       }),
+      merge: (persisted, current) => ({
+        ...current,
+        ...(persisted as Partial<DeckStore>),
+        selectedCard: null,
+      }),
     }
   )
 );

@@ -11,7 +11,7 @@ interface Props {
 }
 
 function FrameHeader({ card }: { card: Card }) {
-  const frameClass = `frame-${card.frameType.split('_')[0]}`;
+  const frameClass = `frame-${(card.frameType ?? 'normal').split('_')[0]}`;
   return (
     <div className={`${frameClass} px-4 py-2 flex items-center gap-2`}>
       {card.attribute && (
