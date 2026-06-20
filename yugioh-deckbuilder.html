@@ -716,7 +716,7 @@ async function doSearch(reset = true) {
     return;
   }
   if (reset) { state.currentPage = 0; state.hasMore = true; }
-  const params = { ...buildSearchParams(), num: PAGE_SIZE, offset: state.currentPage * PAGE_SIZE };
+  const params = { ...buildSearchParams(), num: String(PAGE_SIZE), offset: String(state.currentPage * PAGE_SIZE) };
   state.isLoading = true;
   if (reset) renderSearchLoading();
   try {

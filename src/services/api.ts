@@ -13,8 +13,10 @@ export async function searchCards(params: SearchParams): Promise<Card[]> {
   if (params.banlist) query.set('banlist', params.banlist);
   if (params.staple) query.set('staple', 'yes');
   if (params.sort) query.set('sort', params.sort);
-  if (params.num) query.set('num', params.num.toString());
-  if (params.offset) query.set('offset', params.offset.toString());
+  if (params.num !== undefined && params.offset !== undefined) {
+    query.set('num', params.num.toString());
+    query.set('offset', params.offset.toString());
+  }
 
   const res = await fetch(`${BASE}/cardinfo.php?${query}`);
   if (!res.ok) {
