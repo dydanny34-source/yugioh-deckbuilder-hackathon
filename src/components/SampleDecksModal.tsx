@@ -82,15 +82,20 @@ export function SampleDecksModal({ onClose }: Props) {
       <div className="bg-[#13131f] border border-white/10 rounded-xl shadow-2xl w-full max-w-3xl max-h-[88vh] flex overflow-hidden">
 
         {/* Left — archetype list */}
-        <div className="w-44 shrink-0 border-r border-white/5 overflow-y-auto py-1">
-          <p className="text-[10px] uppercase tracking-widest text-gray-600 px-3 py-2">Archetypes</p>
-          {SAMPLE_DECKS.map(deck => {
+        <div className="w-48 shrink-0 border-r border-white/5 overflow-y-auto py-1">
+          {(['Classic', '2024 TCG', '2025 TCG'] as const).map(era => {
+            const group = SAMPLE_DECKS.filter(d => d.era === era);
+            if (group.length === 0) return null;
+            return (
+              <div key={era}>
+                <p className="text-[9px] uppercase tracking-widest text-gray-600 px-3 pt-3 pb-1">{era}</p>
+                {group.map(deck => {
             const active = deck.id === selected.id;
             return (
               <button
                 key={deck.id}
                 onClick={() => selectDeck(deck)}
-                className={`w-full text-left px-3 py-2.5 flex flex-col gap-1 transition-colors border-l-2 ${
+                className={`w-full text-left px-3 py-2 flex flex-col gap-0.5 transition-colors border-l-2 ${
                   active
                     ? 'bg-accent/10 border-accent'
                     : 'border-transparent hover:bg-white/5'
@@ -105,6 +110,9 @@ export function SampleDecksModal({ onClose }: Props) {
                 </span>
               </button>
             );
+                })}
+              </div>
+            );
           })}
         </div>
 
@@ -114,9 +122,14 @@ export function SampleDecksModal({ onClose }: Props) {
           {/* Header */}
           <div className="flex items-start justify-between px-5 py-3 border-b border-white/5 shrink-0">
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="font-bold text-accent text-base">{selected.name}</h2>
                 <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${d.cls}`}>{d.label}</span>
+                {selected.era !== 'Classic' && (
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded border text-purple-400 bg-purple-400/10 border-purple-400/20">
+                    {selected.era}
+                  </span>
+                )}
               </div>
               <p className="text-xs text-gray-500 mt-0.5">{selected.playstyle}</p>
             </div>
@@ -200,25 +213,32 @@ export function SampleDecksModal({ onClose }: Props) {
           </div>
 
           {/* Footer */}
-          <div className="shrink-0 px-5 py-3 border-t border-white/5 flex items-center gap-3">
-            {result && <span className="text-xs text-yellow-400 flex-1">{result}</span>}
-            {result && (
-              <button onClick={onClose} className="text-xs text-gray-400 hover:text-white px-3 py-1.5 border border-white/10 rounded">
-                Close
-              </button>
+          <div className="shrink-0 border-t border-white/5">
+            {selected.era !== 'Classic' && (
+              <p className="text-[10px] text-gray-600 px-5 pt-2">
+                ⚠ Builds reflect the 2024-2025 TCG meta (data through Aug 2025). Ban list and ratios may differ in 2026.
+              </p>
             )}
-            {!result && (
-              <button
-                onClick={handleLoad}
-                disabled={loading}
-                className="ml-auto flex items-center gap-2 px-5 py-2 bg-accent hover:bg-yellow-400 text-black font-bold text-sm rounded transition-colors disabled:opacity-50"
-              >
-                {loading
-                  ? <><Loader2 size={13} className="animate-spin" /> Fetching cards…</>
-                  : <>{hasCards ? 'Replace with this Deck' : 'Load this Deck'} <ChevronRight size={13} /></>
-                }
-              </button>
-            )}
+            <div className="px-5 py-3 flex items-center gap-3">
+              {result && <span className="text-xs text-yellow-400 flex-1">{result}</span>}
+              {result && (
+                <button onClick={onClose} className="text-xs text-gray-400 hover:text-white px-3 py-1.5 border border-white/10 rounded">
+                  Close
+                </button>
+              )}
+              {!result && (
+                <button
+                  onClick={handleLoad}
+                  disabled={loading}
+                  className="ml-auto flex items-center gap-2 px-5 py-2 bg-accent hover:bg-yellow-400 text-black font-bold text-sm rounded transition-colors disabled:opacity-50"
+                >
+                  {loading
+                    ? <><Loader2 size={13} className="animate-spin" /> Fetching cards…</>
+                    : <>{hasCards ? 'Replace with this Deck' : 'Load this Deck'} <ChevronRight size={13} /></>
+                  }
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
