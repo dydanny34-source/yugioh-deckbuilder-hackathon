@@ -34,6 +34,17 @@ export async function getCardById(id: number): Promise<Card> {
   return data.data[0] as Card;
 }
 
+export async function getCardByName(name: string): Promise<Card | null> {
+  try {
+    const res = await fetch(`${BASE}/cardinfo.php?name=${encodeURIComponent(name)}&misc=yes`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return (data.data as Card[])?.[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function getMetaStaples(): Promise<Card[]> {
   const res = await fetch(`${BASE}/cardinfo.php?misc=yes&staple=yes&sort=views`);
   if (!res.ok) throw new Error('Failed to fetch staples');

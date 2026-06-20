@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Save, Download, Plus, FolderOpen, Trash2, Swords } from 'lucide-react';
+import { Save, Download, Plus, FolderOpen, Trash2, Swords, LayoutTemplate } from 'lucide-react';
 import { useDeckStore } from '../store/deckStore';
 import type { Format } from '../types';
+import { SampleDecksModal } from './SampleDecksModal';
 
 const FORMATS: { value: Format; label: string }[] = [
   { value: 'tcg', label: 'TCG' },
@@ -24,6 +25,7 @@ export function Navbar() {
   }));
 
   const [showDecks, setShowDecks] = useState(false);
+  const [showSamples, setShowSamples] = useState(false);
   const [editingName, setEditingName] = useState(false);
 
   const handleExport = () => {
@@ -42,6 +44,7 @@ export function Navbar() {
   };
 
   return (
+    <>
     <nav className="shrink-0 bg-surface border-b border-white/10 px-4 py-2 flex items-center gap-3 relative z-50">
       {/* Logo */}
       <div className="flex items-center gap-2 font-bold text-accent mr-2">
@@ -91,6 +94,14 @@ export function Navbar() {
 
       {/* Actions */}
       <div className="flex items-center gap-1.5 ml-auto">
+        <button
+          onClick={() => setShowSamples(true)}
+          title="Sample Decks"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-300 bg-surface hover:bg-white/10 border border-white/10 rounded transition-colors"
+        >
+          <LayoutTemplate size={13} /> Samples
+        </button>
+
         <button
           onClick={() => { newDeck(); setShowDecks(false); }}
           title="New Deck"
@@ -150,5 +161,8 @@ export function Navbar() {
         </button>
       </div>
     </nav>
+
+    {showSamples && <SampleDecksModal onClose={() => setShowSamples(false)} />}
+    </>
   );
 }

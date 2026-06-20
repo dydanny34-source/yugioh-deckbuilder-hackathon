@@ -40,6 +40,7 @@ interface DeckStore {
 
   setSelectedCard: (card: Card | null) => void;
   addCard: (card: Card, zone?: Zone) => string | null;
+  importDeck: (name: string, main: DeckCard[], extra: DeckCard[], side: DeckCard[]) => void;
   removeCard: (cardId: number, zone: Zone) => void;
   setDeckName: (name: string) => void;
   setFormat: (format: Format) => void;
@@ -59,6 +60,18 @@ export const useDeckStore = create<DeckStore>()(
       selectedCard: null,
 
       setSelectedCard: (card) => set({ selectedCard: card }),
+
+      importDeck: (name, main, extra, side) =>
+        set(s => ({
+          currentDeck: {
+            ...s.currentDeck,
+            name,
+            main,
+            extra,
+            side,
+            updatedAt: new Date().toISOString(),
+          },
+        })),
 
       addCard: (card, zone?) => {
         const { currentDeck } = get();
