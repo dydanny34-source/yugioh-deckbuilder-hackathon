@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Search, SlidersHorizontal, Zap, ChevronDown, ChevronUp } from 'lucide-react';
 import { searchCards, getMetaStaples, CARD_TYPES, ATTRIBUTES, RACES, SORT_OPTIONS } from '../services/api';
@@ -10,10 +10,10 @@ const PAGE = 60;
 
 function useDebounced<T>(value: T, delay: number): T {
   const [deb, setDeb] = useState(value);
-  useCallback(() => {
+  useEffect(() => {
     const t = setTimeout(() => setDeb(value), delay);
     return () => clearTimeout(t);
-  }, [value, delay])();
+  }, [value, delay]);
   return deb;
 }
 
