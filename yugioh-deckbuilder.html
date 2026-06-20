@@ -920,6 +920,397 @@ const RULINGS = {
     'Most effective when you know the opponent runs the card you reveal.',
     'The revealed card in your Extra Deck must share the name with a card in the opponent\'s Extra Deck.',
   ],
+
+  // ── Quick-Play Spells / Back Row ─────────────────────────
+
+  'Book of Moon': [
+    'Quick-Play Spell — can be activated during either player\'s turn.',
+    'Targets 1 face-up monster and flips it face-down in Defense Position.',
+    'A face-down monster cannot be targeted by effects that require targeting face-up monsters.',
+    'Does not permanently negate effects — they resume if the monster is flipped face-up.',
+    'Limited to 1 in most formats.',
+  ],
+  'Book of Eclipse': [
+    'Flips all face-up monsters on the field face-down simultaneously.',
+    'Does not target — all face-up monsters are affected at once.',
+    'During the End Phase, the opponent draws 1 card for each of their monsters flipped by this effect.',
+    'Useful for bypassing effects that only apply while monsters are face-up (e.g., Apollousa, Borrelsword).',
+  ],
+  'Forbidden Chalice': [
+    'Quick-Play Spell targeting 1 face-up monster.',
+    'The target gains 400 ATK and its effects are negated until End Phase.',
+    'Can be used offensively (boost your own monster) or defensively (negate opponent\'s monster).',
+    'Useful for negating monsters that have GY floating effects triggered by leaving the field.',
+  ],
+  'Forbidden Lance': [
+    'Quick-Play Spell targeting 1 face-up monster.',
+    'The target loses 800 ATK and is unaffected by other Spell and Trap cards until End Phase.',
+    'Can protect your own monster from Spells/Traps like Raigeki or Mirror Force.',
+    'Does not protect from monster effects — only Spell and Trap cards.',
+  ],
+  'Compulsory Evacuation Device': [
+    'Targets 1 monster on the field and returns it to the owner\'s hand.',
+    'Does not destroy — bypasses destruction immunity.',
+    'XYZ/Link Monsters returned to Extra Deck lose all their materials.',
+    'Useful for removing problem monsters that cannot be destroyed.',
+  ],
+  'Ice Dragon\'s Prison': [
+    'Targets 1 monster in the opponent\'s GY and banishes it.',
+    'Then Special Summons 1 monster from your own GY with the same Type.',
+    'The Special Summoned monster cannot attack this turn and is destroyed at End Phase.',
+    'Disruptive against GY-reliant strategies while also providing a body.',
+  ],
+  'Trap Trick': [
+    'Banish 1 Normal Trap from your Deck face-down, then add 1 of the same name to hand and immediately Set it.',
+    'The Set Trap can be activated the same turn it is Set via this card.',
+    'Effectively searches and instantly Sets any Normal Trap in your Deck.',
+    'Requires at least 2 copies of the named Trap — one to banish, one to Set.',
+  ],
+
+  // ── PSY-Frame Engine ──────────────────────────────────────
+
+  'PSY-Framegear Gamma': [
+    'Activates in the hand when you control NO monsters and the opponent activates a monster effect.',
+    'Negates and destroys the triggering monster, then Special Summons itself and PSY-Frame Driver from hand or Deck.',
+    'Cannot be used if you control any monsters — even Tokens prevent activation.',
+    'Both Gamma and Driver are banished at the End Phase.',
+    'Very powerful hand trap that also provides a body for follow-up plays.',
+  ],
+  'PSY-Frame Driver': [
+    'A 2500 ATK Normal Monster with no effect.',
+    'Required to activate PSY-Framegear Gamma — must be in hand or Deck.',
+    'Banished during End Phase when Special Summoned by Gamma.',
+    'Can be Normal Summoned if drawn, but has no effect on the field.',
+  ],
+
+  // ── Artifact Engine ───────────────────────────────────────
+
+  'Artifact Lancea': [
+    'When destroyed by an opponent\'s effect during their turn and sent to GY: neither player can banish cards for the rest of that turn.',
+    'Typically Set in the Spell/Trap Zone to bait destruction and trigger on the opponent\'s turn.',
+    'Counter to Macro Cosmos, Pot of Desires, Called by the Grave, and other banish-heavy strategies.',
+    'Only triggers if destroyed by an opponent\'s card effect — not your own.',
+  ],
+  'Artifact Moralltach': [
+    'When destroyed by an opponent\'s effect during their turn and sent to GY: Special Summon it and destroy 1 face-up card the opponent controls.',
+    'Typically Set in the Spell/Trap Zone to be destroyed and trigger.',
+    'The destruction effect targets a face-up card.',
+    'Synergizes with cards that pop your own backrow on the opponent\'s turn.',
+  ],
+  'Artifact Sanctum': [
+    'When the opponent activates a card or effect during their Main/Battle Phase: Special Summon 1 "Artifact" monster from Deck.',
+    'If this card is destroyed and sent to GY during the opponent\'s turn: destroy 1 card on the field.',
+    'Triggers on almost any opponent action during their turn.',
+    'Cannot be activated during your own turn.',
+  ],
+
+  // ── Hand Traps (Additional) ───────────────────────────────
+
+  'Ghost Sister & Spooky Dogwood': [
+    'Activates in the hand when the opponent gains LP from a card effect.',
+    'Until End Phase, negates all LP gain from card effects.',
+    'Does not negate the triggering LP gain — only prevents future LP gain that turn.',
+    'Primarily used against Eldlich, burn-loop strategies, or cards like Upstart Goblin.',
+  ],
+
+  // ── Boss Monsters ─────────────────────────────────────────
+
+  'Divine Arsenal AA-ZEUS - Sky Thunder': [
+    'Can be XYZ Summoned by stacking onto any XYZ Monster that attacked this turn.',
+    'Once per turn: detach 2 XYZ Materials to send ALL other cards on the field to GY.',
+    'The send does not destroy and does not target — bypasses virtually all protection.',
+    'Once per opponent\'s turn (Quick Effect): when another card or effect activates, attach 1 card from hand, field, or GY as XYZ Material.',
+    'One of the most powerful going-second board-wipe tools in the game.',
+  ],
+  'Number 11: Big Eye': [
+    'XYZ Summoned using 2 Level 7 monsters.',
+    'Once per turn: detach 1 XYZ Material to permanently take control of 1 opponent monster.',
+    'The stolen monster cannot attack the turn it is taken.',
+    'Control change is permanent — the monster does not return at End Phase.',
+  ],
+  'Topologic Trisbaena': [
+    'When a monster is Special Summoned to a zone this card points to (by either player): banish all Spells/Traps on field and in both GYs, then deal 500 damage per banished card.',
+    'Triggers when EITHER player summons to a linked zone — be careful not to self-trigger.',
+    'Clears entire backrow and deals massive burn damage.',
+  ],
+  'Saryuja Skull Dread': [
+    'Link-4 requiring 4 monsters with different names.',
+    'When Link Summoned: draw 4 cards then place 3 back on top of Deck in any order.',
+    'Monsters Special Summoned to zones this card points to can be Summoned ignoring their conditions.',
+    'The draw effect only triggers when properly Link Summoned — not from GY revival.',
+  ],
+  'Linkuriboh': [
+    'Link-1 using 1 Level 1 monster.',
+    'Quick Effect: when a monster is declared as an attack target, tribute 1 Level 1 monster to make the attacker\'s ATK 0 until End Phase.',
+    'When a monster declares a direct attack: Special Summon this card from GY.',
+    'The GY revival is a Trigger Effect that activates during the Battle Phase.',
+  ],
+  'Black Luster Soldier - Envoy of the Beginning': [
+    'Special Summoned by banishing 1 LIGHT and 1 DARK monster from your GY.',
+    'Once per turn: banish 1 monster on the field, then this card can attack again (not directly).',
+    'OR: once per turn this card can attack twice, but the second must be a direct attack.',
+    'Only one of the two effects can be used per turn. Limited to 1.',
+  ],
+  'Chaos Dragon Levianeer': [
+    'Special Summoned by banishing 3 monsters (at least 1 LIGHT and 1 DARK) from your GY.',
+    'When Special Summoned: apply 1 effect based on the banished monsters\' Attributes.',
+    'All LIGHT: shuffle up to 3 opponent GY cards into their Deck.',
+    'All DARK: Special Summon 1 monster from your GY.',
+    'Both LIGHT and DARK among the banished: destroy 1 card on the field.',
+    'Cannot be Special Summoned from the GY after being sent there.',
+  ],
+  'Dark Armed Dragon': [
+    'Can only be Special Summoned while you have exactly 3 DARK monsters in your GY.',
+    'Once per turn: banish 1 DARK monster from your GY to destroy 1 card on the field.',
+    'The Summon condition checks the exact count — not "at least 3."',
+    'Managing GY count precisely is central to playing this card. Limited to 1.',
+  ],
+  'Fairy Tail - Snow': [
+    'Special Summoned from hand by banishing 7 WATER/FIRE/WIND/EARTH/DIVINE monsters from your GY.',
+    'When Normal or Special Summoned: flip 1 face-up opponent monster face-down.',
+    'Quick Effect: banish this card from hand or GY to flip 1 face-up monster face-down.',
+    'The Quick Effect from GY makes it a persistent disruption tool. Limited in TCG.',
+  ],
+  'Witch of the Black Forest': [
+    'When sent from the field to the GY: add 1 monster with 1500 or less DEF from your Deck to hand.',
+    'Triggers when destroyed, sent by effect, or used as Link/Synchro material.',
+    'Searches a wide range of monsters due to the DEF-based condition. Limited to 1.',
+  ],
+  'The Winged Dragon of Ra - Sphere Mode': [
+    'Special Summoned from hand by tributing 3 monsters (your own OR the opponent\'s, or a mix).',
+    'When Tribute Summoned using opponent\'s monsters, they cannot activate effects in response.',
+    'This card has 0 ATK/DEF and cannot attack — purely a board-clearing disruption piece.',
+    'During your next Standby Phase: tribute this card to Special Summon 1 "Winged Dragon of Ra" from hand, Deck, or GY.',
+  ],
+  'Lava Golem': [
+    'Only Special Summoned to the OPPONENT\'S field by tributing 2 of their monsters.',
+    'The tribute bypasses targeting and destruction protection.',
+    'The opponent takes 1000 damage during each of their Standby Phases while they control it.',
+    'Since it is given to the opponent, you remove 2 of their monsters but they receive a body.',
+  ],
+  'Number 86: Heroic Champion - Rhongomyniad': [
+    'XYZ Summoned using 2 Level 4 Warrior monsters.',
+    'Once per turn (Quick Effect): detach 1 or more materials to apply cumulative effects:',
+    '1 material: cannot be destroyed in battle. 2: opponent cannot activate effects during Battle Phase.',
+    '3: opponent cannot Special Summon. 4: cannot Set cards or activate Spell/Traps.',
+    '5: all opponent monsters have 0 ATK/DEF.',
+    'Destroyed at End Phase if it has no XYZ Material.',
+  ],
+
+  // ── Archetype Staples ─────────────────────────────────────
+
+  'Eldlich the Golden Lord': [
+    'Once per turn: send 1 Spell/Trap you control to GY to target 1 monster on field — send it to GY.',
+    'The "send to GY" does not destroy — bypasses indestructible protection.',
+    'When sent to GY (by any means): add 1 "Eldlich" or 1 "Golden Land" card from Deck to hand, then during your Standby Phase Special Summon it from GY.',
+    'The self-revival from GY triggers during the Standby Phase and is very hard to interrupt.',
+    'Immune to destruction by card effects while in the GY (not on the field).',
+  ],
+  'Fallen of Albaz': [
+    'When a monster is Normal or Special Summoned by the opponent: can Fusion Summon 1 "Albaz" Fusion Monster using this card and that opponent\'s monster as material.',
+    'The opponent\'s monster is used as Fusion Material without targeting.',
+    'After the Fusion Summon, Fallen of Albaz goes to the bottom of the Deck (not GY).',
+    'Key piece of Branded strategies — steals opponent\'s monsters as Fusion Material.',
+  ],
+  'Branded Fusion': [
+    'Fusion Summons 1 "Albaz" Fusion Monster using monsters from hand, field, OR Deck as materials.',
+    'Sending materials directly from Deck sets up the GY for follow-up plays.',
+    'You cannot Special Summon except Fusion Monsters the turn you activate this.',
+    'Limited to 1 — primary combo starter for Branded/Despia.',
+  ],
+  'Mirrorjade the Iceblade Dragon': [
+    'Fusion Monster using Fallen of Albaz + any Fusion/Synchro/XYZ/Link Monster.',
+    'Once per turn: banish 1 "Albaz" Fusion Monster from your Extra Deck to banish 1 opponent monster.',
+    'Cannot attack the turn this effect is used.',
+    'When destroyed during the opponent\'s turn or sent to GY during their turn: at the end of that turn, destroy ALL monsters on the field.',
+    'The delayed End Phase board wipe is extremely powerful going second.',
+  ],
+  'Albion the Branded Dragon': [
+    'Fusion Monster using Fallen of Albaz + 1 LIGHT Dragon.',
+    'Once per turn: send 1 "Branded" Spell/Trap from Deck to GY, then Set 1 "Branded" Spell/Trap from GY to your field.',
+    'The Set card can be activated this turn.',
+    'When sent to GY: place 1 "Branded" Spell/Trap from Deck face-up in the Field Zone.',
+    'Enables cycling through the entire Branded Spell/Trap engine.',
+  ],
+  'Despian Tragedy': [
+    'When this card in your hand or field is used as Fusion Material: add 1 "Despia" monster or "Branded" Spell/Trap from Deck to hand.',
+    'Commonly sent from Deck via Branded Fusion to trigger the search on the way to GY.',
+    'Key search piece in Branded/Despia strategies.',
+  ],
+  'Kashtira Fenrir': [
+    'Once per turn: Special Summon 1 "Kashtira" monster from Deck (besides Fenrir), ignoring Summon conditions.',
+    'If a card the opponent controls is banished face-down: add 1 "Kashtira" card from Deck to hand.',
+    'Quick Effect: when the opponent activates a card or effect, banish 1 card they control face-down.',
+    'Banishing face-down is very powerful — those cards are inaccessible for the rest of the duel.',
+    'Limited to 1 in TCG.',
+  ],
+  'Kashtira Unicorn': [
+    'Once per turn: add 1 "Kashtiratheosis" or 1 Level 7 "Kashtira" monster from Deck to hand.',
+    'If a card the opponent controls is banished face-down: Special Summon 1 "Kashtira" monster from Deck.',
+    'Combo starter and recursive searcher that snowballs with Fenrir\'s face-down banishing.',
+  ],
+  'Pressured Planet Wraitsoth': [
+    'Field Spell — each player can only control 1 monster on the field at a time.',
+    'When a "Kashtira" monster is Normal or Special Summoned: add 1 "Kashtira" card from Deck to hand.',
+    'When a card the opponent controls is banished face-down: destroy 1 card on the field.',
+    'Acts as both a floodgate and an engine enabler simultaneously.',
+  ],
+  'Sky Striker Mobilize - Engage!': [
+    'Requires no monsters in your Main Monster Zone to activate.',
+    'Adds 1 "Sky Striker" Spell from Deck to hand.',
+    'If you have 3 or more Spells in your GY: also draw 1 card.',
+    'Limited to 1 — provides free search plus draw in developed GY states.',
+  ],
+  'Sky Striker Ace - Raye': [
+    'When sent from the field to the GY: Special Summon 1 "Sky Striker Ace" Link Monster from Extra Deck.',
+    'Triggers when destroyed, sent by effect, or used as Link material.',
+    'Also has a Quick Effect to tribute itself and Special Summon another "Sky Striker Ace" from Extra Deck.',
+    'Core engine piece — running 3 ensures consistent access to the strategy.',
+  ],
+  'Sky Striker Mecha - Widow Anchor': [
+    'Quick-Play Spell (requires no monsters in Main Monster Zone).',
+    'Targets 1 Effect Monster: negate its effects until End Phase.',
+    'If you have 3 or more Spells in your GY: also take control of the target until End Phase.',
+    'Without 3 GY Spells, it only negates without control takeover.',
+  ],
+  'Sky Striker Mecha Modules - Multirole': [
+    'While you control no Main Monster Zone monsters: once per turn, target 1 "Sky Striker" Spell in GY and Set it (can activate this turn).',
+    'During End Phase: Set all "Sky Striker" Spells that left the field or were banished this turn.',
+    'Enables recurring use of Sky Striker Spells each turn — central to the engine loop.',
+  ],
+  'Salamangreat Gazelle': [
+    'When a "Salamangreat" card is sent to your GY: Special Summon this card from hand.',
+    'When Normal or Special Summoned: add 1 "Salamangreat" monster from GY to hand.',
+    'Triggers on discard costs, destruction, or any effect sending a Salamangreat to GY.',
+    'Key extender that Special Summons for free while recycling GY resources.',
+  ],
+  'Salamangreat Sanctuary': [
+    'Field Spell for Salamangreat.',
+    'Once per turn: can Link Summon 1 "Salamangreat" Link Monster using only the same-named monster you control as the sole material (Reincarnation Link Summon).',
+    'Reincarnated monsters gain bonus effects beyond their normal printed effects.',
+    'Central to Salamangreat combo loops.',
+  ],
+  'Tri-Brigade Fraktall': [
+    'Effect (from hand or field): send 1 Beast, Beast-Warrior, or Winged Beast from Deck to GY.',
+    'When in the GY (while you control a Beast/Beast-Warrior/Winged Beast): banish this card and any number of monsters from GY to Link Summon 1 Tri-Brigade Link Monster.',
+    'The Deck send sets up GY resources for the GY-based Link Summon.',
+    'Banished monsters used for the Link Summon are removed permanently.',
+    'Core combo starter for Tri-Brigade strategies.',
+  ],
+  'Tri-Brigade Kitt': [
+    'When sent from the field to the GY: add 1 Beast, Beast-Warrior, or Winged Beast from Deck to hand.',
+    'Synergizes with Fraktall — send Kitt with Fraktall to trigger the search.',
+    'Searched monsters fuel hand plays or further GY combo lines.',
+  ],
+  'Tri-Brigade Nervall': [
+    'When this card is banished: add 1 "Tri-Brigade" monster from Deck to hand.',
+    'Triggers when banished by Fraktall\'s GY effect for a Link Summon.',
+    'Provides consistent search each time it is used as Fraktall material.',
+  ],
+  'Spright Elf': [
+    'Link-2 requiring 2 Level/Rank/Link 2 monsters.',
+    'Cannot be destroyed by card effects while it points to a "Spright" monster.',
+    'Once per turn: detach 1 material from an XYZ Monster to Special Summon 1 Level 2 monster from GY.',
+    'Banned in TCG — created unkillable recursive loops with Level 2 monsters.',
+  ],
+  'Rescue Rabbit': [
+    'Cannot be Special Summoned from the Deck by card effects.',
+    'Banish this card from the field to Special Summon 2 Level 4 or lower Normal Monsters with the same name from Deck.',
+    'The 2 summoned monsters are destroyed at End Phase.',
+    'Used to Rank 4 XYZ Summon using identical Normal Monsters. Limited to 1.',
+  ],
+  'Floowandereeze & Robina': [
+    'During Main Phase: Normal Summon/Set 1 "Floowandereeze" monster in addition to your standard Normal Summon.',
+    'When Normal Summoned: add 1 Level 1 Winged Beast from Deck to hand.',
+    'All Floowandereeze monsters shuffle back into Deck during End Phase if still face-up.',
+    'The additional Normal Summon enables chaining multiple Floowandereeze activations in one turn.',
+  ],
+  'Floowandereeze & Eglen': [
+    'When Normal Summoned: add 1 "Floowandereeze" Spell/Trap from Deck to hand.',
+    'Tribute this card or another Winged Beast to Normal Summon 1 "Floowandereeze" from hand.',
+    'Shuffles back into Deck during End Phase if still face-up.',
+    'Core searcher in Floowandereeze combos — chains into Robina and further searches.',
+  ],
+  'Labrynth Cooclock': [
+    'When Normal Summoned: add 1 "Labrynth" card from Deck to hand.',
+    'If a Normal Trap is activated while this card is in GY: Special Summon it.',
+    'Revives itself every time a Normal Trap fires — creates a recurring body.',
+    'Core engine piece in Labrynth strategies.',
+  ],
+  'Arianna the Labrynth Servant': [
+    'When Normal Summoned while you control a Fiend: add 1 "Labrynth" Spell/Trap from Deck to hand.',
+    'If a Normal Trap you control destroys an opponent\'s card: Special Summon 1 Fiend from Deck in Defense Position.',
+    'The Special Summon does not target. Core searcher and recruiter for Labrynth.',
+  ],
+  'Welcome Labrynth': [
+    'Normal Trap that adds 1 "Labrynth" card from Deck to hand.',
+    'If a Fiend is Special Summoned to your field while this is in GY: Set this card from GY.',
+    'Reusable every time a Fiend is Special Summoned — creates recurring Trap access.',
+  ],
+  'Big Welcome Labrynth': [
+    'Normal Trap: Special Summon 1 Fiend from hand or Deck, ignoring Summon conditions.',
+    'Then shuffle 1 card on the opponent\'s field into the Deck (does not target).',
+    'If a Fiend is Special Summoned to your field while this is in GY: Set this card from GY.',
+    'The shuffle into Deck bypasses destruction immunity and targeting protection.',
+  ],
+  'Necrovalley': [
+    'Field Spell preventing any effect from adding cards from GY to hand, Special Summoning from GY, or banishing from GY.',
+    'Both players are affected.',
+    'Gravekeeper\'s monsters gain 500 ATK/DEF while this is active.',
+    'Effectively shuts down most GY recursion strategies.',
+  ],
+  'Zombie World': [
+    'Field Spell making all monsters on field and in both GYs become Zombie-Type.',
+    'Neither player can Tribute Summon monsters except Zombie-Type.',
+    'Allows Zombie-specific effects to work on any monster.',
+    'Synergizes strongly with Rivalry of Warlords — forces both players into Zombies only.',
+  ],
+  'Tearlaments Scheiren': [
+    'When Normal or Special Summoned: send the top 3 cards of your Deck to GY.',
+    'Quick Effect: discard this card to Fusion Summon 1 Fusion Monster using monsters from hand or field.',
+    'If this card is sent to GY by a card effect: Fusion Summon 1 Fusion Monster using monsters from GY.',
+    'The GY-based Fusion triggers on any card effect send — including the opponent\'s effects.',
+    'Limited or Banned in most formats — a one-card Fusion engine.',
+  ],
+  'Tearlaments Kitkallos': [
+    'WATER Fusion Monster using any 2 WATER monsters.',
+    'When Fusion Summoned: add 1 "Tearlaments" card from Deck to hand.',
+    'Once per turn: send 1 WATER monster from hand to GY, then target 1 monster on the field and return it to the bottom of the Deck.',
+    'If sent to GY by a card effect: Special Summon 1 "Tearlaments" monster from GY.',
+    'Banned in TCG — generates too many Fusion Summons from GY while searching.',
+  ],
+  'Rescue-ACE Hydrant': [
+    'During your opponent\'s turn (Quick Effect): when an opponent\'s card or effect is activated, add 1 "Rescue-ACE" monster from Deck to hand.',
+    'Triggers on ANY opponent effect activation — generates hand advantage every turn.',
+    'Core hand trap and searcher for Rescue-ACE strategies.',
+  ],
+  'Rescue-ACE Turbulence': [
+    'When Normal Summoned: Set 2 "Rescue-ACE" Traps with different names from Deck directly to your field.',
+    'The Set Traps can be activated this turn.',
+    'Requires you to control no monsters except Rescue-ACE monsters.',
+    'Provides immediate Trap access on the turn it is summoned.',
+  ],
+  'Purrely': [
+    'When Normal Summoned: look at top 3 cards of Deck, add 1 "Purrely" Quick-Play Spell to hand, place the rest back in any order.',
+    'A Quick-Play Spell effect allows attaching this card and 1 "Purrely" Quick-Play Spell from hand as XYZ Material.',
+    'Core starter that loads XYZ Materials onto Purrely XYZ Monsters.',
+  ],
+  'My Friend Purrely': [
+    'Quick-Play Spell that Special Summons 1 "Purrely" monster from Deck.',
+    'Can be attached to a "Purrely" XYZ Monster as XYZ Material using Purrely\'s Quick Effect.',
+    'Combo starter that searches and summons the core Purrely body.',
+  ],
+  'Purrely Sleepy Memory': [
+    'Quick-Play Spell: add 1 "Purrely" card from Deck to hand.',
+    'When attached to an XYZ Monster as material: prevents the monster from being targeted by opponent effects.',
+    'Provides targeting protection when loaded as XYZ Material.',
+  ],
+  'Expurrely Noir': [
+    'Rank 7 XYZ Monster — boss of the Purrely strategy.',
+    'Cannot be destroyed by card effects while it has XYZ Material.',
+    'Once per turn: detach 1 material to look at the opponent\'s hand and banish 1 card face-down.',
+    'Hand banishing removes key cards before the opponent can use them.',
+  ],
 };
 
 // ════════════════════════════════════════════
