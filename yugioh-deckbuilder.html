@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YGO Deck Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d0d1a;
+      --surface: #1a1a2e;
+      --panel: #16213e;
+      --border: rgba(255,255,255,0.06);
+      --accent: #e2b04a;
+      --accent-hover: #f0c060;
+      --text: #e5e7eb;
+      --muted: #6b7280;
+      --red: #dc2626;
+      --orange: #ea580c;
+      --yellow: #ca8a04;
+      --green: #16a34a;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100vh; overflow: hidden; font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+    button { cursor: pointer; border: none; background: none; color: inherit; font-family: inherit; font-size: inherit; }
+    input, select { font-family: inherit; font-size: inherit; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #2d2d4e; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    /* ── Layout ── */
+    #app {
+      display: grid;
+      grid-template-rows: 48px 1fr;
+      grid-template-columns: 300px 1fr 0px;
+      height: 100vh;
+      transition: grid-template-columns 0.2s ease;
+    }
+    #app.detail-open { grid-template-columns: 300px 1fr 290px; }
+
+    #navbar {
+      grid-column: 1 / -1;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+    }
+    #search-panel {
+      grid-column: 1;
+      grid-row: 2;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #deck-panel {
+      grid-column: 2;
+      grid-row: 2;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    #detail-panel {
+      grid-column: 3;
+      grid-row: 2;
+      background: var(--panel);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Navbar ── */
+    .logo { display: flex; align-items: center; gap: 6px; color: var(--accent); font-weight: 700; font-size: 13px; letter-spacing: 0.05em; margin-right: 4px; }
+    .logo svg { flex-shrink: 0; }
+    .format-group { display: flex; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+    .format-btn { padding: 4px 10px; font-size: 11px; font-weight: 600; color: var(--muted); transition: all 0.15s; }
+    .format-btn:hover { color: var(--text); }
+    .format-btn.active { background: var(--accent); color: #000; }
+    #deck-name-btn { flex: 1; text-align: left; color: #d1d5db; font-size: 13px; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 4px 6px; border-radius: 4px; }
+    #deck-name-btn:hover { background: rgba(255,255,255,0.05); color: #fff; }
+    #deck-name-input { flex: 1; max-width: 200px; background: rgba(0,0,0,0.4); color: var(--text); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--accent); outline: none; font-size: 13px; }
+    .nav-spacer { flex: 1; }
+    .nav-btn { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 5px; font-size: 11px; font-weight: 600; transition: all 0.15s; }
+    .nav-btn-primary { background: var(--accent); color: #000; }
+    .nav-btn-primary:hover { background: var(--accent-hover); }
+    .nav-btn-secondary { background: var(--surface); color: #9ca3af; border: 1px solid var(--border); }
+    .nav-btn-secondary:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .nav-icon-btn { padding: 5px; border-radius: 5px; color: var(--muted); }
+    .nav-icon-btn:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .nav-icon-btn.active { color: var(--accent); }
+    .dropdown-wrap { position: relative; }
+    #decks-dropdown {
+      position: absolute; right: 0; top: calc(100% + 4px);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 6px; min-width: 220px; z-index: 100;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      display: none;
+    }
+    #decks-dropdown.open { display: block; }
+    .deck-item { display: flex; align-items: center; padding: 7px 12px; gap: 8px; }
+    .deck-item:hover { background: rgba(255,255,255,0.04); }
+    .deck-item-name { flex: 1; font-size: 12px; color: #d1d5db; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: none; text-align: left; }
+    .deck-item-name:hover { color: #fff; }
+    .deck-item-format { font-size: 10px; color: var(--muted); font-weight: 600; }
+    .deck-item-del { color: #dc2626; opacity: 0; font-size: 11px; transition: opacity 0.15s; }
+    .deck-item:hover .deck-item-del { opacity: 1; }
+    .dropdown-empty { font-size: 12px; color: var(--muted); padding: 10px 12px; }
+
+    /* ── Search Panel ── */
+    #search-header { padding: 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; }
+    .search-input-wrap { position: relative; }
+    .search-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+    #search-input { width: 100%; padding: 6px 8px 6px 30px; background: var(--surface); border: 1px solid transparent; border-radius: 6px; color: var(--text); outline: none; font-size: 13px; }
+    #search-input:focus { border-color: rgba(226,176,74,0.4); }
+    #search-input::placeholder { color: var(--muted); }
+    .search-actions { display: flex; gap: 6px; }
+    #meta-btn { flex: 1; padding: 5px 8px; background: var(--surface); border-radius: 5px; font-size: 11px; font-weight: 600; color: var(--muted); display: flex; align-items: center; justify-content: center; gap: 5px; border: 1px solid var(--border); transition: all 0.15s; }
+    #meta-btn:hover, #meta-btn.active { background: var(--accent); color: #000; border-color: transparent; }
+    #filter-toggle { padding: 5px 8px; background: var(--surface); border-radius: 5px; font-size: 11px; color: var(--muted); border: 1px solid var(--border); display: flex; align-items: center; gap: 3px; transition: all 0.15s; }
+    #filter-toggle:hover, #filter-toggle.active { color: var(--accent); border-color: rgba(226,176,74,0.3); }
+    #filters { padding: 8px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; display: none; flex-direction: column; gap: 5px; }
+    #filters.open { display: flex; }
+    #filters select { width: 100%; padding: 5px 8px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 5px; outline: none; font-size: 12px; }
+    #filters select:focus { border-color: rgba(226,176,74,0.4); }
+    .filter-row { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+    #search-results { flex: 1; overflow-y: auto; padding: 8px; }
+    .card-grid { display: flex; flex-wrap: wrap; gap: 5px; }
+    #search-footer { padding: 5px 10px; border-top: 1px solid var(--border); font-size: 10px; color: #374151; flex-shrink: 0; }
+    .loading-grid { display: flex; flex-wrap: wrap; gap: 5px; }
+    .skeleton { width: 88px; height: 128px; background: linear-gradient(90deg, #1a1a2e 25%, #2a2a4e 50%, #1a1a2e 75%); background-size: 200%; animation: shimmer 1.5s infinite; border-radius: 4px; }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    .search-empty { text-align: center; padding: 40px 16px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .search-empty svg { display: block; margin: 0 auto 12px; opacity: 0.2; }
+    .accent-text { color: var(--accent); }
+
+    /* ── Card Item (search) ── */
+    .card-item { position: relative; width: 88px; flex-shrink: 0; cursor: pointer; border-radius: 4px; overflow: hidden; transition: transform 0.12s, z-index 0s; }
+    .card-item:hover { transform: scale(1.07); z-index: 5; }
+    .card-item.selected { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .card-item img { width: 88px; height: 128px; display: block; object-fit: cover; }
+    .card-item-placeholder { width: 88px; height: 128px; background: var(--surface); display: flex; align-items: center; justify-content: center; font-size: 9px; text-align: center; padding: 4px; color: var(--muted); }
+    .ban-dot { position: absolute; top: 3px; right: 3px; width: 10px; height: 10px; border-radius: 50%; }
+    .ban-dot.banned { background: var(--red); }
+    .ban-dot.limited { background: var(--orange); }
+    .ban-dot.semi { background: var(--yellow); }
+
+    /* ── Deck Panel ── */
+    #deck-stats { flex-shrink: 0; padding: 6px 10px; background: rgba(0,0,0,0.3); border-bottom: 1px solid var(--border); display: none; align-items: center; gap: 14px; font-size: 11px; }
+    #deck-stats.visible { display: flex; }
+    .stat-item { display: flex; align-items: center; gap: 5px; }
+    .stat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .stat-dot.mon { background: #ea580c; }
+    .stat-dot.sp { background: #16a34a; }
+    .stat-dot.tr { background: #7c3aed; }
+    .stat-label { color: var(--muted); }
+    .stat-num { font-weight: 700; color: var(--text); }
+    #type-bar { margin-left: auto; display: flex; height: 6px; width: 80px; border-radius: 3px; overflow: hidden; }
+    .type-bar-seg { transition: width 0.3s; }
+    .type-bar-seg.mon { background: #ea580c; }
+    .type-bar-seg.sp { background: #16a34a; }
+    .type-bar-seg.tr { background: #7c3aed; }
+    #deck-zones { flex: 1; overflow-y: auto; }
+    .zone { border-bottom: 1px solid var(--border); }
+    .zone-header { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: rgba(0,0,0,0.25); flex-shrink: 0; }
+    .zone-name { font-size: 11px; font-weight: 600; color: #d1d5db; }
+    .zone-hint { font-size: 10px; color: var(--muted); }
+    .zone-count { margin-left: auto; font-size: 11px; font-family: monospace; font-weight: 700; }
+    .zone-count.ok { color: #4ade80; }
+    .zone-count.warn { color: #facc15; }
+    .zone-count.over { color: var(--red); }
+    .zone-cards { padding: 6px 8px; display: flex; flex-wrap: wrap; gap: 3px; min-height: 40px; }
+    .zone-empty { padding: 12px 10px; font-size: 11px; color: #374151; text-align: center; }
+
+    /* ── Deck Card (smaller) ── */
+    .deck-card { position: relative; width: 70px; flex-shrink: 0; cursor: pointer; border-radius: 3px; overflow: hidden; transition: transform 0.1s; }
+    .deck-card:hover { transform: scale(1.08); z-index: 5; }
+    .deck-card.selected { outline: 2px solid var(--accent); }
+    .deck-card img { width: 70px; height: 102px; display: block; object-fit: cover; }
+    .deck-card-placeholder { width: 70px; height: 102px; background: var(--surface); display: flex; align-items: center; justify-content: center; font-size: 8px; text-align: center; color: var(--muted); padding: 3px; }
+    .deck-card-remove { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: rgba(220,38,38,0.8); border-radius: 3px; display: none; align-items: center; justify-content: center; font-size: 13px; line-height: 1; }
+    .deck-card:hover .deck-card-remove { display: flex; }
+    .deck-card-remove:hover { background: var(--red); }
+
+    /* ── Card Detail Panel ── */
+    #detail-panel { overflow: hidden; }
+    #detail-panel.hidden { display: none; }
+    #detail-close { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.5); border-radius: 3px; padding: 3px; color: var(--muted); }
+    #detail-close:hover { color: var(--text); }
+    #detail-img-wrap { position: relative; background: #000; display: flex; justify-content: center; padding: 8px; flex-shrink: 0; }
+    #detail-img { height: 180px; object-fit: contain; border-radius: 3px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
+    .detail-frame { padding: 5px 10px; display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .detail-attribute { font-size: 10px; font-weight: 700; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 3px; }
+    .detail-race { font-size: 11px; color: rgba(255,255,255,0.7); }
+    #detail-scroll { flex: 1; overflow-y: auto; padding: 10px 12px; display: flex; flex-direction: column; gap: 14px; }
+    .detail-name { font-weight: 700; color: var(--accent); line-height: 1.3; font-size: 14px; }
+    .detail-archetype { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .staple-badge { display: inline-flex; align-items: center; gap: 3px; background: var(--accent); color: #000; font-size: 9px; font-weight: 700; padding: 2px 5px; border-radius: 3px; margin-left: 4px; }
+    .detail-section-title { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+    .stat-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+    .stat-bar-label { font-size: 11px; color: var(--muted); width: 28px; flex-shrink: 0; }
+    .stat-bar-track { flex: 1; height: 5px; background: #1f2937; border-radius: 3px; overflow: hidden; }
+    .stat-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; }
+    .stat-bar-val { font-size: 11px; font-family: monospace; color: #d1d5db; width: 36px; text-align: right; flex-shrink: 0; }
+    .detail-desc { font-size: 11px; color: #d1d5db; line-height: 1.6; white-space: pre-wrap; }
+    .ban-badges { display: flex; flex-wrap: wrap; gap: 5px; }
+    .ban-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 4px; }
+    .ban-badge .fmt { opacity: 0.6; font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .ban-badge.banned { background: var(--red); color: #fff; }
+    .ban-badge.limited { background: var(--orange); color: #fff; }
+    .ban-badge.semi { background: var(--yellow); color: #000; }
+    .ban-badge.unlimited { background: var(--green); color: #fff; }
+    .usage-row { display: flex; align-items: center; justify-content: space-between; font-size: 11px; margin-bottom: 5px; }
+    .usage-pct { font-weight: 700; color: var(--accent); }
+    .usage-track { height: 6px; background: #1f2937; border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+    .usage-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), #f0c060); }
+    .usage-fill.pop { background: #3b82f6; }
+    .usage-note { font-size: 10px; color: var(--muted); font-style: italic; }
+    .rulings-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .ruling-item { display: flex; gap: 6px; font-size: 11px; color: #d1d5db; line-height: 1.5; }
+    .ruling-bullet { color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+    .yugipedia-link { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; color: #60a5fa; margin-top: 4px; text-decoration: none; }
+    .yugipedia-link:hover { color: #93c5fd; }
+    .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+    .price-item { background: var(--surface); border-radius: 4px; padding: 5px 8px; }
+    .price-source { font-size: 10px; color: var(--muted); }
+    .price-val { font-size: 12px; font-weight: 600; color: var(--accent); }
+    #detail-add-btn { margin: 10px 12px; padding: 8px; background: var(--accent); color: #000; font-weight: 700; font-size: 13px; border-radius: 6px; width: calc(100% - 24px); transition: background 0.15s; flex-shrink: 0; }
+    #detail-add-btn:hover { background: var(--accent-hover); }
+
+    /* ── Frame colors ── */
+    .frame-normal { background: linear-gradient(135deg,#8b6a00,#c8a822); }
+    .frame-effect { background: linear-gradient(135deg,#7a3510,#b86a24); }
+    .frame-ritual { background: linear-gradient(135deg,#0e2a6b,#1e4aab); }
+    .frame-fusion { background: linear-gradient(135deg,#3b0a6b,#7030a0); }
+    .frame-synchro { background: linear-gradient(135deg,#555,#aaa); }
+    .frame-xyz { background: linear-gradient(135deg,#0a0a0a,#252525); }
+    .frame-link { background: linear-gradient(135deg,#0a1a4a,#1a3a8a); }
+    .frame-spell { background: linear-gradient(135deg,#063a20,#0f6a38); }
+    .frame-trap { background: linear-gradient(135deg,#3a0648,#7a1488); }
+    .frame-token { background: linear-gradient(135deg,#3a3a3a,#686868); }
+    .frame-skill { background: linear-gradient(135deg,#004060,#007090); }
+
+    /* ── Misc ── */
+    .hidden { display: none !important; }
+    .fade-in { animation: fadeIn 0.18s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+    .error-msg { text-align: center; color: #f87171; font-size: 12px; padding: 16px; }
+    .level-stars { color: var(--accent); font-size: 11px; letter-spacing: 0px; }
+    .detail-level { font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+    .linkmarkers { font-size: 11px; color: var(--muted); }
+    @media (max-width: 900px) {
+      #app { grid-template-columns: 240px 1fr 0px; }
+      #app.detail-open { grid-template-columns: 0px 1fr 280px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <!-- ═══ NAVBAR ═══ -->
+  <nav id="navbar">
+    <div class="logo">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/>
+        <path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+        <path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/>
+        <path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/>
+        <path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"/>
+        <path d="M15.5 9H17v1.5c0 .83-.67 1.5-1.5 1.5S14 11.33 14 10.5 14.67 9 15.5 9z"/>
+        <path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"/>
+        <path d="M8.5 15H7v-1.5c0-.83.67-1.5 1.5-1.5S10 12.67 10 13.5 9.33 15 8.5 15z"/>
+      </svg>
+      YGO Deck Builder
+    </div>
+
+    <div class="format-group">
+      <button class="format-btn active" data-fmt="tcg">TCG</button>
+      <button class="format-btn" data-fmt="ocg">OCG</button>
+      <button class="format-btn" data-fmt="goat">GOAT</button>
+    </div>
+
+    <button id="deck-name-btn" title="Click to rename"></button>
+    <input id="deck-name-input" class="hidden" type="text" maxlength="60" />
+
+    <div class="nav-spacer"></div>
+
+    <button class="nav-icon-btn" id="new-deck-btn" title="New Deck">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+
+    <div class="dropdown-wrap">
+      <button class="nav-icon-btn" id="load-btn" title="My Decks">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      </button>
+      <div id="decks-dropdown">
+        <div id="decks-list"></div>
+      </div>
+    </div>
+
+    <button class="nav-btn nav-btn-primary" id="save-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Save
+    </button>
+    <button class="nav-btn nav-btn-secondary" id="export-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export
+    </button>
+  </nav>
+
+  <!-- ═══ SEARCH PANEL ═══ -->
+  <aside id="search-panel">
+    <div id="search-header">
+      <div class="search-input-wrap">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="search-input" type="text" placeholder="Search cards…" autocomplete="off" />
+      </div>
+      <div class="search-actions">
+        <button id="meta-btn">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Meta Staples
+        </button>
+        <button id="filter-toggle">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+          Filters
+          <svg id="filter-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="filters">
+      <select id="filter-type">
+        <option value="">All Types</option>
+        <option value="Effect Monster">Effect Monster</option>
+        <option value="Normal Monster">Normal Monster</option>
+        <option value="Flip Effect Monster">Flip Effect Monster</option>
+        <option value="Tuner Monster">Tuner Monster</option>
+        <option value="Synchro Monster">Synchro Monster</option>
+        <option value="Synchro Tuner Monster">Synchro Tuner Monster</option>
+        <option value="XYZ Monster">XYZ Monster</option>
+        <option value="Fusion Monster">Fusion Monster</option>
+        <option value="Link Monster">Link Monster</option>
+        <option value="Ritual Monster">Ritual Monster</option>
+        <option value="Ritual Effect Monster">Ritual Effect Monster</option>
+        <option value="Pendulum Effect Monster">Pendulum Effect Monster</option>
+        <option value="Normal Pendulum Monster">Normal Pendulum Monster</option>
+        <option value="Spell Card">Spell Card</option>
+        <option value="Trap Card">Trap Card</option>
+      </select>
+      <div class="filter-row">
+        <select id="filter-attr">
+          <option value="">Attribute</option>
+          <option>DARK</option><option>LIGHT</option><option>WATER</option>
+          <option>FIRE</option><option>EARTH</option><option>WIND</option><option>DIVINE</option>
+        </select>
+        <select id="filter-level">
+          <option value="">Level</option>
+          <option>1</option><option>2</option><option>3</option><option>4</option>
+          <option>5</option><option>6</option><option>7</option><option>8</option>
+          <option>9</option><option>10</option><option>11</option><option>12</option>
+        </select>
+      </div>
+      <select id="filter-race">
+        <option value="">All Races / Spell Type</option>
+        <option>Aqua</option><option>Beast</option><option>Beast-Warrior</option>
+        <option>Cyberse</option><option>Dinosaur</option><option>Dragon</option>
+        <option>Fairy</option><option>Fiend</option><option>Fish</option>
+        <option>Insect</option><option>Machine</option><option>Plant</option>
+        <option>Psychic</option><option>Pyro</option><option>Reptile</option>
+        <option>Rock</option><option>Spellcaster</option><option>Thunder</option>
+        <option>Warrior</option><option>Winged Beast</option><option>Wyrm</option>
+        <option>Zombie</option>
+        <option>Normal</option><option>Continuous</option><option>Counter</option>
+        <option>Equip</option><option>Field</option><option>Quick-Play</option><option>Ritual</option>
+      </select>
+      <select id="filter-sort">
+        <option value="views">Sort: Popularity</option>
+        <option value="name">Sort: Name</option>
+        <option value="atk">Sort: ATK</option>
+        <option value="def">Sort: DEF</option>
+        <option value="level">Sort: Level</option>
+      </select>
+    </div>
+
+    <div id="search-results">
+      <div class="search-empty">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <div>Search by name or apply filters</div>
+        <div style="margin-top:6px;font-size:11px;">or click <span class="accent-text">Meta Staples</span> to browse top cards</div>
+      </div>
+    </div>
+    <div id="search-footer">Double-click or click <b>+ Add to Deck</b> to add cards</div>
+  </aside>
+
+  <!-- ═══ DECK PANEL ═══ -->
+  <main id="deck-panel">
+    <div id="deck-stats">
+      <div class="stat-item"><span class="stat-dot mon"></span><span class="stat-label">Monsters</span><span class="stat-num" id="stat-mon">0</span></div>
+      <div class="stat-item"><span class="stat-dot sp"></span><span class="stat-label">Spells</span><span class="stat-num" id="stat-sp">0</span></div>
+      <div class="stat-item"><span class="stat-dot tr"></span><span class="stat-label">Traps</span><span class="stat-num" id="stat-tr">0</span></div>
+      <div id="type-bar">
+        <div class="type-bar-seg mon" id="bar-mon" style="width:0%"></div>
+        <div class="type-bar-seg sp" id="bar-sp" style="width:0%"></div>
+        <div class="type-bar-seg tr" id="bar-tr" style="width:0%"></div>
+      </div>
+    </div>
+    <div id="deck-zones">
+      <div class="zone" id="zone-main">
+        <div class="zone-header">
+          <span class="zone-name">Main Deck</span>
+          <span class="zone-hint">40–60 cards</span>
+          <span class="zone-count" id="count-main">0/60</span>
+        </div>
+        <div class="zone-cards" id="cards-main">
+          <div class="zone-empty">Add monsters, spells, and traps here</div>
+        </div>
+      </div>
+      <div class="zone" id="zone-extra">
+        <div class="zone-header">
+          <span class="zone-name">Extra Deck</span>
+          <span class="zone-hint">up to 15</span>
+          <span class="zone-count" id="count-extra">0/15</span>
+        </div>
+        <div class="zone-cards" id="cards-extra">
+          <div class="zone-empty">Fusion, Synchro, XYZ, and Link monsters</div>
+        </div>
+      </div>
+      <div class="zone" id="zone-side">
+        <div class="zone-header">
+          <span class="zone-name">Side Deck</span>
+          <span class="zone-hint">up to 15</span>
+          <span class="zone-count" id="count-side">0/15</span>
+        </div>
+        <div class="zone-cards" id="cards-side">
+          <div class="zone-empty">Matchup-specific cards go here</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ═══ DETAIL PANEL ═══ -->
+  <aside id="detail-panel">
+    <div id="detail-img-wrap">
+      <button id="detail-close" title="Close">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <img id="detail-img" src="" alt="" />
+    </div>
+    <div id="detail-frame" class="detail-frame"></div>
+    <div id="detail-scroll">
+      <!-- populated by JS -->
+    </div>
+    <button id="detail-add-btn">+ Add to Deck</button>
+  </aside>
+</div>
+
+<script>
+'use strict';
+
+// ════════════════════════════════════════════
+//  RULINGS DATA
+// ════════════════════════════════════════════
+const RULINGS = {
+  'Ash Blossom & Joyous Spring': [
+    'Activates in hand when opponent activates an effect that searches, adds from GY to hand/field, or Special Summons from Deck.',
+    'The card is sent to GY as a cost when activated.',
+    'Can be activated during the Damage Step.',
+    'A second Ash Blossom cannot be chained to the first — only one copy per chain.',
+    'Negates the specific effect that triggered it, not the entire card.',
+    'Does not negate effects that add from the banished zone or from hand.',
+  ],
+  'Effect Veiler': [
+    'Targets one face-up Effect Monster your opponent controls.',
+    'Negates the target\'s effects until the End Phase of the current turn.',
+    'Can only be activated during your opponent\'s Main Phase.',
+    'If the targeted monster leaves the field, the negation disappears — effects return if the monster re-enters the field.',
+    'Cannot negate Continuous Effects (like stat boosts from Skill Drain).',
+  ],
+  'Infinite Impermanence': [
+    'If you control no cards, it can be activated from hand during the opponent\'s Main Phase.',
+    'When activated from hand, all Set Spell/Trap effects in the same column are negated for the rest of that turn.',
+    'When Set and activated normally, negates the targeted monster\'s effects until End Phase.',
+    'You cannot activate it from hand if you control a card in that same column.',
+  ],
+  'Nibiru, the Primal Being': [
+    'Triggers when the opponent successfully completes their 5th Normal or Special Summon in one turn.',
+    'Tributes ALL monsters on the field (both players\'). The opponent then receives a Primal Being Token.',
+    'The Token\'s ATK/DEF equals the total ATK/DEF of all tributed monsters.',
+    'Count includes Normal Summons, all Special Summons, and Flip Summons — Ritual Summons count too.',
+    'Does not count: failed summons, Tokens created by other effects, or monsters moved without being summoned.',
+  ],
+  'Called by the Grave': [
+    'Banishes one monster from either player\'s GY.',
+    'Negates all effects of monsters with that name in all zones until End Phase.',
+    'Used primarily to counter hand traps (Ash Blossom, Effect Veiler, Ghost Belle, etc.).',
+    'The banished card is face-up and counts toward opponent\'s copy limits.',
+    'Only negates monsters — cannot negate Spells or Traps with the same name.',
+  ],
+  'Pot of Prosperity': [
+    'Banish 6 or 3 cards from your Extra Deck face-down (your choice).',
+    'Look at the top cards equal to the number banished, then add 1 to hand.',
+    'For the rest of the turn, you cannot draw cards by card effects (normal draw each turn still allowed).',
+    'You cannot activate if your Extra Deck has fewer cards than the chosen number.',
+    'The banished cards are face-down and effectively removed from the duel.',
+  ],
+  'Pot of Desires': [
+    'Banish 10 cards from the top of your Deck face-down, then draw 2 cards.',
+    'The 10 banished cards are inaccessible for the rest of the duel.',
+    'Activating multiple copies greatly risks losing key combo pieces.',
+    'Cannot be activated if your Deck has fewer than 10 cards.',
+  ],
+  'Lightning Storm': [
+    'Can only be activated if you control no face-up cards.',
+    'Choose one of two effects: destroy all Attack Position monsters your opponent controls, OR destroy all Spell/Trap cards they control.',
+    'The monster destruction effect does not target.',
+    'The Spell/Trap destruction requires opponent to have at least one face-up Spell or Trap.',
+    'Choose at activation — the effect cannot be changed afterward.',
+  ],
+  'Dark Ruler No More': [
+    'Negates the effects of all face-up Effect Monsters your opponent controls until End Phase.',
+    'Your opponent cannot chain monster effects to this card\'s activation.',
+    'Your opponent takes no damage for the rest of the turn after resolution.',
+    'Does not destroy the negated monsters — they remain on field without effects.',
+    'Does NOT negate effects that activate in the GY — only on-field effects.',
+  ],
+  'Triple Tactics Talent': [
+    'Can only be activated during your Main Phase if the opponent activated a monster effect in your Main Phase.',
+    'Choose one effect: draw 2 / take control of one opponent\'s monster / look at opponent\'s hand and send 1 to GY.',
+    'The effect is chosen at activation and cannot be changed.',
+    'Any opponent monster effect activated during your Main Phase triggers eligibility.',
+  ],
+  'Solemn Judgment': [
+    'Pay half your LP (rounded up) to negate and destroy any Summon or Spell/Trap activation.',
+    'Can negate all Summon types: Normal, Special, Flip, and Set.',
+    'When negating a Summon, the monster is destroyed.',
+    'Counter Trap — can only be chained to other Counter Traps.',
+    'Cannot chain a second Solemn Judgment to the first.',
+  ],
+  'Solemn Strike': [
+    'Pay 1500 LP to negate a Special Summon or monster effect, then destroy that card.',
+    'Cannot negate Normal Summons — use Solemn Warning for that.',
+    'Can negate monster effects anywhere: on-field, in hand, in GY.',
+    'Counter Trap — can only be chained to other Counter Traps.',
+  ],
+  'Solemn Warning': [
+    'Pay 2000 LP.',
+    'Negate any Summon (Normal or Special) or any effect that would Special Summon a monster.',
+    'Can negate effects that would Special Summon even if the monster isn\'t on field yet.',
+    'Counter Trap — can only chain to other Counter Traps.',
+    'The negated monster(s) are destroyed.',
+  ],
+  'Crossout Designator': [
+    'Declare 1 card name; banish 1 copy of that card from your Deck.',
+    'Until End Phase, opponent cannot activate cards with the declared name.',
+    'You MUST have a copy of the declared card in your Deck — otherwise it\'s an illegal activation.',
+    'Primarily used to preemptively counter hand traps.',
+    'The banished card is face-up.',
+  ],
+  'Ghost Belle & Haunted Mansion': [
+    'Activates in hand when opponent activates an effect that adds from GY to hand/field, banishes from GY, or Special Summons from GY.',
+    'Sent to GY as a cost; negates the triggering effect.',
+    'Cannot negate effects that add from Deck (use Ash Blossom for that).',
+    'Effective against Called by the Grave, GY recovery, and GY-based Special Summons.',
+    'Can be activated during the Damage Step.',
+  ],
+  'Droll & Lock Bird': [
+    'Activates in hand after the opponent adds a card from outside the field to their hand (not during Draw Phase).',
+    'For the rest of the turn, neither player can add cards from outside the field to their hand.',
+    'This restricts searches, card effect draws, and GY-to-hand adds — but NOT the normal Draw Phase draw.',
+    'Sent to GY as cost. Both players are restricted — time activation wisely.',
+    'Extremely effective against combo decks that rely on chained searches.',
+  ],
+  'Ghost Ogre & Snow Rabbit': [
+    'Activates from hand or field when a monster or Spell/Trap on the field activates its effect.',
+    'Destroys the card whose effect was activated.',
+    'Does NOT negate the effect — just destroys the card. Effect still resolves if the card left field naturally.',
+    'Sent to GY as cost when used from hand.',
+    'Good against Field Spells, Pendulum Zones, and on-field monsters.',
+  ],
+  'Maxx "C"': [
+    'Activates in hand during either player\'s Main or Battle Phase.',
+    'Until End Phase, each time the opponent Special Summons, you draw 1 card.',
+    'Often forces opponents to stop combos to avoid giving excessive draw advantage.',
+    'Sent to GY as cost when activated.',
+    'BANNED in TCG / LIMITED in OCG — always check format legality.',
+  ],
+  'Forbidden Droplet': [
+    'Send any number of cards from your hand and/or field to GY to target that many opponent Effect Monsters.',
+    'Halves those monsters\' ATK and negates their effects until End Phase.',
+    'The opponent cannot activate cards sharing a type (Monster/Spell/Trap) with the cards you sent as cost.',
+    'Sending Spell Cards as cost prevents opponent from chaining Spell Cards.',
+    'Does not target — bypasses "cannot be targeted" protection.',
+  ],
+  'Kaiju': [
+    'Tribute one of the opponent\'s monsters to Special Summon a Kaiju from hand to the opponent\'s side.',
+    'You can only control 1 Kaiju at a time.',
+    'Tributing the opponent\'s monster does not target — bypasses "cannot be targeted/destroyed" protection.',
+    'The tribute is a cost and cannot be negated by most effects.',
+    'Removes monsters with untargetable/indestructible effects by replacing them with a Kaiju.',
+  ],
+};
+
+// ════════════════════════════════════════════
+//  META USAGE RATES
+// ════════════════════════════════════════════
+const META_USAGE = {
+  'Ash Blossom & Joyous Spring': { rate: 96, note: 'Ubiquitous — nearly every competitive deck runs 3 copies' },
+  'Effect Veiler': { rate: 74, note: 'Premier hand trap in combo-heavy metas' },
+  'Infinite Impermanence': { rate: 91, note: 'Flexible disruption run in most competitive builds' },
+  'Nibiru, the Primal Being': { rate: 62, note: 'Strong going-second option vs long combo strings' },
+  'Called by the Grave': { rate: 82, note: 'Reliable hand trap counter in any format' },
+  'Pot of Prosperity': { rate: 58, note: 'High consistency in decks with an Extra Deck to spare' },
+  'Pot of Desires': { rate: 44, note: 'High draw reward at cost of 10 random banishes' },
+  'Lightning Storm': { rate: 61, note: 'Key board-breaker going second' },
+  'Dark Ruler No More': { rate: 53, note: 'Efficient one-card board wipe for going second' },
+  'Triple Tactics Talent': { rate: 51, note: 'Powerful in hand-trap-heavy metas; generates free advantage' },
+  'Solemn Judgment': { rate: 38, note: 'High LP cost but universal negate on a Counter Trap' },
+  'Solemn Strike': { rate: 48, note: 'Staple 1500 LP negate in control builds' },
+  'Solemn Warning': { rate: 29, note: 'Broader negate range than Strike at higher LP cost' },
+  'Crossout Designator': { rate: 65, note: 'Direct answer to the hand trap meta' },
+  'Ghost Belle & Haunted Mansion': { rate: 43, note: 'Powerful in GY-heavy or Called by the Grave metas' },
+  'Droll & Lock Bird': { rate: 55, note: 'Shuts down search-heavy combo decks entirely' },
+  'Ghost Ogre & Snow Rabbit': { rate: 37, note: 'Situational but useful against Field Spells and Pendulums' },
+  'Ghost Reaper & Winter Cherries': { rate: 29, note: 'Tech choice to remove key Extra Deck targets' },
+  'Maxx "C"': { rate: 88, note: 'OCG dominant; Banned in TCG since 2015' },
+  'Forbidden Droplet': { rate: 46, note: 'Powerful non-targeting mass negate for going second' },
+};
+
+// ════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════
+const EXTRA_FRAMES = new Set(['fusion','synchro','xyz','link',
+  'fusion_pendulum','synchro_pendulum','xyz_pendulum']);
+
+const ZONE_LIMITS = { main: 60, extra: 15, side: 15 };
+
+function createDeck() {
+  return {
+    id: crypto.randomUUID(),
+    name: 'New Deck',
+    format: 'tcg',
+    main: [],
+    extra: [],
+    side: [],
+    createdAt: new Date().toISOString(),
+  };
+}
+
+let state = {
+  deck: createDeck(),
+  savedDecks: [],
+  selectedCard: null,
+  searchResults: [],
+  isLoading: false,
+  isMetaMode: false,
+  searchDebounce: null,
+  currentPage: 0,
+  hasMore: true,
+};
+
+// Load persisted decks
+try {
+  const saved = localStorage.getItem('ygo-decks-v2');
+  if (saved) state.savedDecks = JSON.parse(saved);
+} catch(_) {}
+
+// ════════════════════════════════════════════
+//  API
+// ════════════════════════════════════════════
+const API = 'https://db.ygoprodeck.com/api/v7';
+const PAGE_SIZE = 60;
+
+async function apiFetch(params) {
+  const q = new URLSearchParams({ misc: '1', ...params });
+  const res = await fetch(`${API}/cardinfo.php?${q}`);
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || 'No cards found');
+  }
+  const data = await res.json();
+  return data.data || [];
+}
+
+function buildSearchParams() {
+  const p = {};
+  const name = document.getElementById('search-input').value.trim();
+  const type = document.getElementById('filter-type').value;
+  const attr = document.getElementById('filter-attr').value;
+  const level = document.getElementById('filter-level').value;
+  const race = document.getElementById('filter-race').value;
+  const sort = document.getElementById('filter-sort').value;
+  if (name) p.fname = name;
+  if (type) p.type = type;
+  if (attr) p.attribute = attr;
+  if (level) p.level = level;
+  if (race) p.race = race;
+  if (sort) p.sort = sort;
+  return p;
+}
+
+function hasAnyFilter() {
+  const p = buildSearchParams();
+  return Object.keys(p).some(k => k !== 'sort');
+}
+
+async function doSearch(reset = true) {
+  if (state.isMetaMode) return;
+  if (!hasAnyFilter()) {
+    renderSearchEmpty();
+    return;
+  }
+  if (reset) { state.currentPage = 0; state.hasMore = true; }
+  const params = { ...buildSearchParams(), num: PAGE_SIZE, offset: state.currentPage * PAGE_SIZE };
+  state.isLoading = true;
+  if (reset) renderSearchLoading();
+  try {
+    const cards = await apiFetch(params);
+    if (reset) {
+      state.searchResults = cards;
+    } else {
+      state.searchResults = [...state.searchResults, ...cards];
+    }
+    state.hasMore = cards.length === PAGE_SIZE;
+    renderSearchResults();
+  } catch(e) {
+    renderSearchError(e.message);
+  } finally {
+    state.isLoading = false;
+  }
+}
+
+async function loadMetaStaples() {
+  state.isLoading = true;
+  state.isMetaMode = true;
+  document.getElementById('meta-btn').classList.add('active');
+  renderSearchLoading();
+  try {
+    const cards = await apiFetch({ staple: 'yes', sort: 'views' });
+    state.searchResults = cards;
+    renderSearchResults();
+  } catch(e) {
+    renderSearchError(e.message);
+  } finally {
+    state.isLoading = false;
+  }
+}
+
+// ════════════════════════════════════════════
+//  DECK LOGIC
+// ════════════════════════════════════════════
+function isExtraDeck(card) {
+  return EXTRA_FRAMES.has(card.frameType);
+}
+
+function getBanStatus(card, format) {
+  const b = card.banlist_info || {};
+  if (format === 'tcg') return b.ban_tcg;
+  if (format === 'ocg') return b.ban_ocg;
+  if (format === 'goat') return b.ban_goat;
+  return undefined;
+}
+
+function maxCopies(card, format) {
+  const status = getBanStatus(card, format);
+  if (status === 'Banned') return 0;
+  if (status === 'Limited') return 1;
+  if (status === 'Semi-Limited') return 2;
+  return 3;
+}
+
+function addCard(card, zone) {
+  const targetZone = zone || (isExtraDeck(card) ? 'extra' : 'main');
+  const zoneArr = state.deck[targetZone];
+  const existing = zoneArr.find(dc => dc.card.id === card.id);
+  const currentQty = existing ? existing.qty : 0;
+  const zoneTotal = zoneArr.reduce((s, dc) => s + dc.qty, 0);
+  const max = maxCopies(card, state.deck.format);
+
+  if (max === 0) { alert(`${card.name} is Banned in ${state.deck.format.toUpperCase()} format.`); return; }
+  if (currentQty >= max) { alert(`You already have the maximum ${max} cop${max===1?'y':'ies'} of ${card.name}.`); return; }
+  if (zoneTotal >= ZONE_LIMITS[targetZone]) { alert(`The ${targetZone} deck is full (${ZONE_LIMITS[targetZone]} cards max).`); return; }
+
+  if (existing) {
+    existing.qty++;
+  } else {
+    zoneArr.push({ card, qty: 1 });
+  }
+  renderDeckZone(targetZone);
+  renderDeckStats();
+}
+
+function removeCard(cardId, zone) {
+  const zoneArr = state.deck[zone];
+  const idx = zoneArr.findIndex(dc => dc.card.id === cardId);
+  if (idx === -1) return;
+  zoneArr[idx].qty--;
+  if (zoneArr[idx].qty <= 0) zoneArr.splice(idx, 1);
+  renderDeckZone(zone);
+  renderDeckStats();
+}
+
+function saveDeck() {
+  const existing = state.savedDecks.findIndex(d => d.id === state.deck.id);
+  const copy = JSON.parse(JSON.stringify(state.deck));
+  copy.updatedAt = new Date().toISOString();
+  if (existing >= 0) {
+    state.savedDecks[existing] = copy;
+  } else {
+    state.savedDecks.push(copy);
+  }
+  localStorage.setItem('ygo-decks-v2', JSON.stringify(state.savedDecks));
+  renderDecksDropdown();
+  flashSaveBtn();
+}
+
+function loadDeck(id) {
+  const deck = state.savedDecks.find(d => d.id === id);
+  if (!deck) return;
+  state.deck = JSON.parse(JSON.stringify(deck));
+  renderNavbar();
+  renderDeckZone('main');
+  renderDeckZone('extra');
+  renderDeckZone('side');
+  renderDeckStats();
+  closeDropdown();
+}
+
+function newDeck() {
+  state.deck = createDeck();
+  renderNavbar();
+  renderDeckZone('main');
+  renderDeckZone('extra');
+  renderDeckZone('side');
+  renderDeckStats();
+}
+
+function exportYdk() {
+  const lines = ['#main'];
+  state.deck.main.forEach(dc => { for(let i=0;i<dc.qty;i++) lines.push(String(dc.card.id)); });
+  lines.push('#extra');
+  state.deck.extra.forEach(dc => { for(let i=0;i<dc.qty;i++) lines.push(String(dc.card.id)); });
+  lines.push('!side');
+  state.deck.side.forEach(dc => { for(let i=0;i<dc.qty;i++) lines.push(String(dc.card.id)); });
+  return lines.join('\n');
+}
+
+// ════════════════════════════════════════════
+//  RENDER HELPERS
+// ════════════════════════════════════════════
+function frameKey(frameType) {
+  return frameType ? frameType.split('_')[0] : 'effect';
+}
+
+function starStr(level) {
+  return '★'.repeat(Math.min(level, 12));
+}
+
+function banCls(status) {
+  if (status === 'Banned') return 'banned';
+  if (status === 'Limited') return 'limited';
+  if (status === 'Semi-Limited') return 'semi';
+  return 'unlimited';
+}
+
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ════════════════════════════════════════════
+//  RENDER: NAVBAR
+// ════════════════════════════════════════════
+function renderNavbar() {
+  document.getElementById('deck-name-btn').textContent = state.deck.name;
+  document.querySelectorAll('.format-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.fmt === state.deck.format);
+  });
+}
+
+// ════════════════════════════════════════════
+//  RENDER: SEARCH
+// ════════════════════════════════════════════
+function renderSearchLoading() {
+  const el = document.getElementById('search-results');
+  let html = '<div class="loading-grid">';
+  for(let i=0;i<18;i++) html += '<div class="skeleton"></div>';
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function renderSearchEmpty() {
+  document.getElementById('search-results').innerHTML = `
+    <div class="search-empty">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <div>Search by name or apply filters</div>
+      <div style="margin-top:6px;font-size:11px;">or click <span class="accent-text">Meta Staples</span> to browse top cards</div>
+    </div>`;
+}
+
+function renderSearchError(msg) {
+  document.getElementById('search-results').innerHTML = `<div class="error-msg">${esc(msg)}</div>`;
+}
+
+function getBanDot(card) {
+  const ban = card.banlist_info?.ban_tcg;
+  if (ban === 'Banned') return '<span class="ban-dot banned"></span>';
+  if (ban === 'Limited') return '<span class="ban-dot limited"></span>';
+  if (ban === 'Semi-Limited') return '<span class="ban-dot semi"></span>';
+  return '';
+}
+
+function renderSearchResults() {
+  const cards = state.searchResults;
+  if (!cards.length) { renderSearchEmpty(); return; }
+  const el = document.getElementById('search-results');
+  let html = '<div class="card-grid" id="card-grid">';
+  cards.forEach((card, i) => {
+    const img = card.card_images?.[0];
+    const sel = state.selectedCard?.id === card.id ? ' selected' : '';
+    html += `<div class="card-item${sel} fade-in" data-idx="${i}" title="${esc(card.name)}">`;
+    if (img) {
+      html += `<img src="${esc(img.image_url_small)}" alt="${esc(card.name)}" loading="lazy">`;
+    } else {
+      html += `<div class="card-item-placeholder">${esc(card.name)}</div>`;
+    }
+    html += getBanDot(card);
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // Pagination
+  if (!state.isMetaMode && (state.currentPage > 0 || state.hasMore)) {
+    html += `<div style="display:flex;gap:8px;justify-content:center;margin:10px 0;">`;
+    if (state.currentPage > 0) {
+      html += `<button id="prev-page" style="font-size:11px;padding:4px 12px;background:#1a1a2e;color:#9ca3af;border:1px solid rgba(255,255,255,0.1);border-radius:4px;">← Prev</button>`;
+    }
+    html += `<span style="font-size:11px;color:#6b7280;align-self:center;">Page ${state.currentPage+1}</span>`;
+    if (state.hasMore) {
+      html += `<button id="next-page" style="font-size:11px;padding:4px 12px;background:#1a1a2e;color:#9ca3af;border:1px solid rgba(255,255,255,0.1);border-radius:4px;">Next →</button>`;
+    }
+    html += '</div>';
+  }
+
+  el.innerHTML = html;
+
+  // Bind card click events
+  el.querySelectorAll('.card-item').forEach(item => {
+    const idx = +item.dataset.idx;
+    const card = cards[idx];
+    item.addEventListener('click', () => selectCard(card, item));
+    item.addEventListener('dblclick', (e) => { e.preventDefault(); addCard(card); });
+  });
+
+  const prev = document.getElementById('prev-page');
+  const next = document.getElementById('next-page');
+  if (prev) prev.addEventListener('click', () => { state.currentPage--; doSearch(false); });
+  if (next) next.addEventListener('click', () => { state.currentPage++; doSearch(false); });
+}
+
+// ════════════════════════════════════════════
+//  RENDER: DECK ZONES
+// ════════════════════════════════════════════
+function renderDeckZone(zone) {
+  const cards = state.deck[zone];
+  const total = cards.reduce((s, dc) => s + dc.qty, 0);
+  const limit = ZONE_LIMITS[zone];
+  const countEl = document.getElementById(`count-${zone}`);
+  const cardsEl = document.getElementById(`cards-${zone}`);
+
+  // Count styling
+  countEl.textContent = `${total}/${limit}`;
+  if (zone === 'main') {
+    countEl.className = 'zone-count ' + (total < 40 ? 'warn' : total <= 60 ? 'ok' : 'over');
+  } else {
+    countEl.className = 'zone-count ' + (total <= limit ? 'ok' : 'over');
+  }
+
+  if (!cards.length) {
+    const hints = {
+      main: 'Add monsters, spells, and traps here',
+      extra: 'Fusion, Synchro, XYZ, and Link monsters',
+      side: 'Matchup-specific cards go here',
+    };
+    cardsEl.innerHTML = `<div class="zone-empty">${hints[zone]}</div>`;
+    return;
+  }
+
+  let html = '';
+  cards.forEach(({ card, qty }) => {
+    for (let q = 0; q < qty; q++) {
+      const img = card.card_images?.[0];
+      const sel = state.selectedCard?.id === card.id ? ' selected' : '';
+      html += `<div class="deck-card${sel}" data-id="${card.id}" data-zone="${zone}" title="${esc(card.name)} (right-click to remove)">`;
+      if (img) {
+        html += `<img src="${esc(img.image_url_small)}" alt="${esc(card.name)}" loading="lazy">`;
+      } else {
+        html += `<div class="deck-card-placeholder">${esc(card.name)}</div>`;
+      }
+      html += `<button class="deck-card-remove" data-id="${card.id}" data-zone="${zone}" title="Remove">×</button>`;
+      html += '</div>';
+    }
+  });
+  cardsEl.innerHTML = html;
+
+  cardsEl.querySelectorAll('.deck-card').forEach(el => {
+    const id = +el.dataset.id;
+    const z = el.dataset.zone;
+    const card = findCard(id);
+    el.addEventListener('click', (e) => {
+      if (e.target.classList.contains('deck-card-remove')) return;
+      if (card) selectCard(card, null);
+    });
+    el.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      removeCard(id, z);
+    });
+  });
+
+  cardsEl.querySelectorAll('.deck-card-remove').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      removeCard(+btn.dataset.id, btn.dataset.zone);
+    });
+  });
+}
+
+function findCard(id) {
+  for (const zone of ['main','extra','side']) {
+    const dc = state.deck[zone].find(dc => dc.card.id === id);
+    if (dc) return dc.card;
+  }
+  const inSearch = state.searchResults.find(c => c.id === id);
+  return inSearch || null;
+}
+
+function renderDeckStats() {
+  const mainCards = state.deck.main;
+  const total = mainCards.reduce((s, dc) => s + dc.qty, 0);
+  const statsEl = document.getElementById('deck-stats');
+  if (!total) { statsEl.classList.remove('visible'); return; }
+  statsEl.classList.add('visible');
+
+  let mon = 0, sp = 0, tr = 0;
+  mainCards.forEach(({ card, qty }) => {
+    if (card.type?.includes('Spell Card')) sp += qty;
+    else if (card.type?.includes('Trap Card')) tr += qty;
+    else mon += qty;
+  });
+  document.getElementById('stat-mon').textContent = mon;
+  document.getElementById('stat-sp').textContent = sp;
+  document.getElementById('stat-tr').textContent = tr;
+  document.getElementById('bar-mon').style.width = `${(mon/total)*100}%`;
+  document.getElementById('bar-sp').style.width = `${(sp/total)*100}%`;
+  document.getElementById('bar-tr').style.width = `${(tr/total)*100}%`;
+}
+
+// ════════════════════════════════════════════
+//  RENDER: CARD DETAIL
+// ════════════════════════════════════════════
+function selectCard(card, clickedEl) {
+  if (state.selectedCard?.id === card.id) {
+    state.selectedCard = null;
+    document.querySelectorAll('.card-item.selected, .deck-card.selected').forEach(e => e.classList.remove('selected'));
+    closeDetail();
+    return;
+  }
+  state.selectedCard = card;
+  document.querySelectorAll('.card-item.selected, .deck-card.selected').forEach(e => e.classList.remove('selected'));
+  if (clickedEl) clickedEl.classList.add('selected');
+  document.querySelectorAll(`.deck-card[data-id="${card.id}"]`).forEach(e => e.classList.add('selected'));
+  renderCardDetail(card);
+}
+
+function closeDetail() {
+  state.selectedCard = null;
+  document.getElementById('app').classList.remove('detail-open');
+}
+
+function renderCardDetail(card) {
+  const img = card.card_images?.[0];
+  document.getElementById('detail-img').src = img?.image_url || '';
+  document.getElementById('detail-img').alt = card.name;
+
+  // Frame color strip
+  const frameEl = document.getElementById('detail-frame');
+  const fk = frameKey(card.frameType);
+  frameEl.className = `detail-frame frame-${fk}`;
+  let frameHtml = '';
+  if (card.attribute) frameHtml += `<span class="detail-attribute">${esc(card.attribute)}</span>`;
+  frameHtml += `<span class="detail-race">${esc(card.race)} / ${esc((card.type||'').replace(' Monster','').replace(' Card',''))}</span>`;
+  frameEl.innerHTML = frameHtml;
+
+  const misc = card.misc_info?.[0] || {};
+  const meta = META_USAGE[card.name];
+  const rulings = RULINGS[card.name] || [];
+  const fmt = state.deck.format;
+
+  let html = '';
+
+  // Name + staple
+  html += `<div>
+    <div style="display:flex;align-items:flex-start;gap:6px;">
+      <div class="detail-name">${esc(card.name)}</div>
+      ${misc.staple ? '<span class="staple-badge">★ STAPLE</span>' : ''}
+    </div>
+    ${card.archetype ? `<div class="detail-archetype">Archetype: ${esc(card.archetype)}</div>` : ''}
+  </div>`;
+
+  // Level / Link
+  if (card.level !== undefined) {
+    if (card.linkval) {
+      html += `<div class="detail-level">Link-${card.linkval}${card.linkmarkers ? ' · ' + card.linkmarkers.join(', ') : ''}</div>`;
+    } else if (card.scale !== undefined) {
+      html += `<div class="detail-level">Level ${card.level} / Scale ${card.scale}</div>`;
+    } else {
+      html += `<div class="detail-level"><span class="level-stars">${starStr(card.level)}</span></div>`;
+    }
+  }
+
+  // ATK/DEF
+  if (card.atk !== undefined) {
+    html += `<div>`;
+    html += `<div class="stat-bar-row"><span class="stat-bar-label">ATK</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width:${Math.min(100,(card.atk/5000)*100)}%"></div></div><span class="stat-bar-val">${card.atk}</span></div>`;
+    if (card.def !== undefined) {
+      html += `<div class="stat-bar-row"><span class="stat-bar-label">DEF</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width:${Math.min(100,(card.def/5000)*100)}%"></div></div><span class="stat-bar-val">${card.def}</span></div>`;
+    }
+    html += `</div>`;
+  }
+
+  // Description
+  html += `<div><div class="detail-desc">${esc(card.desc)}</div></div>`;
+
+  // Ban Status
+  const tcgBan = card.banlist_info?.ban_tcg || 'Unlimited';
+  const ocgBan = card.banlist_info?.ban_ocg || 'Unlimited';
+  const goatBan = card.banlist_info?.ban_goat;
+  html += `<div>
+    <div class="detail-section-title">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+      Ban Status
+    </div>
+    <div class="ban-badges">
+      <span class="ban-badge ${banCls(tcgBan)}"><span class="fmt">TCG</span> ${esc(tcgBan.replace('Semi-Limited','Semi-Lim 2').replace('Limited','Limited 1'))}</span>
+      <span class="ban-badge ${banCls(ocgBan)}"><span class="fmt">OCG</span> ${esc(ocgBan.replace('Semi-Limited','Semi-Lim 2').replace('Limited','Limited 1'))}</span>
+      ${goatBan ? `<span class="ban-badge ${banCls(goatBan)}"><span class="fmt">GOAT</span> ${esc(goatBan)}</span>` : ''}
+    </div>
+  </div>`;
+
+  // Usage Rate
+  html += `<div>
+    <div class="detail-section-title">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Tournament Usage
+    </div>`;
+  if (meta) {
+    html += `<div class="usage-row"><span style="color:#d1d5db;font-size:11px;">Top deck inclusion</span><span class="usage-pct">${meta.rate}%</span></div>
+    <div class="usage-track"><div class="usage-fill" style="width:${meta.rate}%"></div></div>
+    <div class="usage-note">${esc(meta.note)}</div>`;
+  } else if (misc.viewsweek) {
+    const pop = Math.min(100, Math.round((misc.viewsweek / 40000) * 100));
+    html += `<div class="usage-row"><span style="color:#d1d5db;font-size:11px;">Weekly popularity</span><span class="usage-pct">${pop}%</span></div>
+    <div class="usage-track"><div class="usage-fill pop" style="width:${pop}%"></div></div>
+    <div class="usage-note">Based on weekly page views (${(misc.viewsweek||0).toLocaleString()} views)</div>`;
+  } else {
+    html += `<div class="usage-note" style="color:#4b5563;">Insufficient tournament data available</div>`;
+  }
+  html += '</div>';
+
+  // Rulings
+  html += `<div>
+    <div class="detail-section-title">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Rulings
+    </div>`;
+  if (rulings.length) {
+    html += '<ul class="rulings-list">';
+    rulings.forEach(r => {
+      html += `<li class="ruling-item"><span class="ruling-bullet">•</span><span>${esc(r)}</span></li>`;
+    });
+    html += '</ul>';
+  } else {
+    html += `<div class="usage-note" style="color:#4b5563;margin-bottom:4px;">No curated rulings for this card.</div>`;
+  }
+  html += `<a class="yugipedia-link" href="https://yugipedia.com/wiki/${encodeURIComponent(card.name)}" target="_blank" rel="noopener">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    View on Yugipedia
+  </a></div>`;
+
+  // Price
+  const prices = card.card_prices?.[0];
+  if (prices && (prices.tcgplayer_price !== '0.00' || prices.cardmarket_price !== '0.00')) {
+    html += `<div>
+      <div class="detail-section-title">Price</div>
+      <div class="price-grid">`;
+    if (prices.tcgplayer_price && prices.tcgplayer_price !== '0.00') {
+      html += `<div class="price-item"><div class="price-source">TCGPlayer</div><div class="price-val">$${prices.tcgplayer_price}</div></div>`;
+    }
+    if (prices.cardmarket_price && prices.cardmarket_price !== '0.00') {
+      html += `<div class="price-item"><div class="price-source">Cardmarket</div><div class="price-val">€${prices.cardmarket_price}</div></div>`;
+    }
+    html += '</div></div>';
+  }
+
+  document.getElementById('detail-scroll').innerHTML = html;
+
+  // Open detail panel
+  document.getElementById('app').classList.add('detail-open');
+  document.getElementById('detail-add-btn').onclick = () => addCard(card);
+}
+
+// ════════════════════════════════════════════
+//  RENDER: DECKS DROPDOWN
+// ════════════════════════════════════════════
+function renderDecksDropdown() {
+  const list = document.getElementById('decks-list');
+  if (!state.savedDecks.length) {
+    list.innerHTML = '<div class="dropdown-empty">No saved decks yet</div>';
+    return;
+  }
+  let html = '';
+  state.savedDecks.forEach(d => {
+    html += `<div class="deck-item">
+      <button class="deck-item-name" data-id="${d.id}">${esc(d.name)}</button>
+      <span class="deck-item-format">${d.format.toUpperCase()}</span>
+      <button class="deck-item-del" data-id="${d.id}">✕</button>
+    </div>`;
+  });
+  list.innerHTML = html;
+  list.querySelectorAll('.deck-item-name').forEach(btn => {
+    btn.addEventListener('click', () => loadDeck(btn.dataset.id));
+  });
+  list.querySelectorAll('.deck-item-del').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      state.savedDecks = state.savedDecks.filter(d => d.id !== btn.dataset.id);
+      localStorage.setItem('ygo-decks-v2', JSON.stringify(state.savedDecks));
+      renderDecksDropdown();
+    });
+  });
+}
+
+function closeDropdown() {
+  document.getElementById('decks-dropdown').classList.remove('open');
+  document.getElementById('load-btn').classList.remove('active');
+}
+
+function flashSaveBtn() {
+  const btn = document.getElementById('save-btn');
+  const orig = btn.innerHTML;
+  btn.innerHTML = '✓ Saved';
+  btn.style.background = '#16a34a';
+  setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 1500);
+}
+
+// ════════════════════════════════════════════
+//  EVENT BINDING
+// ════════════════════════════════════════════
+function debounce(fn, ms) {
+  let t;
+  return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+}
+
+const debouncedSearch = debounce(() => doSearch(true), 350);
+
+document.getElementById('search-input').addEventListener('input', (e) => {
+  if (state.isMetaMode) {
+    state.isMetaMode = false;
+    document.getElementById('meta-btn').classList.remove('active');
+  }
+  debouncedSearch();
+});
+
+document.getElementById('meta-btn').addEventListener('click', () => {
+  if (state.isMetaMode) {
+    state.isMetaMode = false;
+    document.getElementById('meta-btn').classList.remove('active');
+    renderSearchEmpty();
+  } else {
+    loadMetaStaples();
+  }
+});
+
+document.getElementById('filter-toggle').addEventListener('click', () => {
+  const filtersEl = document.getElementById('filters');
+  const isOpen = filtersEl.classList.toggle('open');
+  document.getElementById('filter-toggle').classList.toggle('active', isOpen);
+  document.getElementById('filter-chevron').style.transform = isOpen ? 'rotate(180deg)' : '';
+});
+
+['filter-type','filter-attr','filter-level','filter-race','filter-sort'].forEach(id => {
+  document.getElementById(id).addEventListener('change', () => {
+    state.isMetaMode = false;
+    document.getElementById('meta-btn').classList.remove('active');
+    doSearch(true);
+  });
+});
+
+document.querySelectorAll('.format-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.deck.format = btn.dataset.fmt;
+    renderNavbar();
+    if (state.selectedCard) renderCardDetail(state.selectedCard);
+  });
+});
+
+// Deck name edit
+const nameBtn = document.getElementById('deck-name-btn');
+const nameInput = document.getElementById('deck-name-input');
+
+nameBtn.addEventListener('click', () => {
+  nameInput.value = state.deck.name;
+  nameBtn.classList.add('hidden');
+  nameInput.classList.remove('hidden');
+  nameInput.focus();
+  nameInput.select();
+});
+
+function commitName() {
+  const v = nameInput.value.trim();
+  if (v) state.deck.name = v;
+  nameInput.classList.add('hidden');
+  nameBtn.classList.remove('hidden');
+  nameBtn.textContent = state.deck.name;
+}
+
+nameInput.addEventListener('blur', commitName);
+nameInput.addEventListener('keydown', e => { if (e.key === 'Enter') commitName(); if (e.key === 'Escape') { nameInput.classList.add('hidden'); nameBtn.classList.remove('hidden'); } });
+
+// Save / Export / New / Load
+document.getElementById('save-btn').addEventListener('click', saveDeck);
+document.getElementById('new-deck-btn').addEventListener('click', () => { if (confirm('Start a new deck? Unsaved changes will be lost.')) newDeck(); });
+
+document.getElementById('export-btn').addEventListener('click', () => {
+  const ydk = exportYdk();
+  const blob = new Blob([ydk], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${state.deck.name.replace(/\s+/g,'_') || 'deck'}.ydk`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+document.getElementById('load-btn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const dd = document.getElementById('decks-dropdown');
+  const isOpen = dd.classList.toggle('open');
+  document.getElementById('load-btn').classList.toggle('active', isOpen);
+  if (isOpen) renderDecksDropdown();
+});
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.dropdown-wrap')) closeDropdown();
+});
+
+document.getElementById('detail-close').addEventListener('click', () => {
+  closeDetail();
+  state.selectedCard = null;
+  document.querySelectorAll('.card-item.selected, .deck-card.selected').forEach(e => e.classList.remove('selected'));
+});
+
+// ════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════
+renderNavbar();
+renderDeckZone('main');
+renderDeckZone('extra');
+renderDeckZone('side');
+renderDeckStats();
+</script>
+</body>
+</html>

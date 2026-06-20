@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #0d0d1a;
+  color: #e5e7eb;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+}
+
+#root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0d1a;
+}
+::-webkit-scrollbar-thumb {
+  background: #2d2d4e;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #e2b04a;
+}
+
+.card-img {
+  image-rendering: crisp-edges;
+}
+
+/* Card type frame colors */
+.frame-normal { background: linear-gradient(135deg, #a8870a, #c8a822); }
+.frame-effect { background: linear-gradient(135deg, #8b4513, #c07b2a); }
+.frame-ritual { background: linear-gradient(135deg, #1a3a6b, #2955a0); }
+.frame-fusion { background: linear-gradient(135deg, #4a1c6b, #7b3eaa); }
+.frame-synchro { background: linear-gradient(135deg, #6b6b6b, #c0c0c0); }
+.frame-xyz { background: linear-gradient(135deg, #111111, #2d2d2d); }
+.frame-link { background: linear-gradient(135deg, #0a2a5a, #1a4a9a); }
+.frame-spell { background: linear-gradient(135deg, #0a4a2a, #1a7a4a); }
+.frame-trap { background: linear-gradient(135deg, #4a0a5a, #8a2a9a); }
+.frame-token { background: linear-gradient(135deg, #555, #888); }
+
+.ban-banned { background-color: #dc2626; }
+.ban-limited { background-color: #ea580c; }
+.ban-semi { background-color: #ca8a04; }
+.ban-unlimited { background-color: #16a34a; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeIn 0.2s ease-out; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #1a1a2e 25%, #2a2a4e 50%, #1a1a2e 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
