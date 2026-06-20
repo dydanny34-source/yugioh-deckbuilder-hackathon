@@ -135,6 +135,12 @@ export const useDeckStore = create<DeckStore>()(
 
       totalCards: (zone) => get().currentDeck[zone].reduce((s, dc) => s + dc.qty, 0),
     }),
-    { name: 'yugioh-deck-v1' }
+    {
+      name: 'yugioh-deck-v1',
+      partialize: (state) => ({
+        currentDeck: state.currentDeck,
+        savedDecks: state.savedDecks,
+      }),
+    }
   )
 );

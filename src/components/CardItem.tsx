@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { Card } from '../types';
 
 interface Props {
@@ -14,7 +15,7 @@ const BAN_DOT: Record<string, string> = {
   'Semi-Limited': 'bg-yellow-400',
 };
 
-export function CardItem({ card, onClick, onDoubleClick, size = 'md', selected }: Props) {
+export const CardItem = memo(function CardItem({ card, onClick, onDoubleClick, size = 'md', selected }: Props) {
   const img = card.card_images[0];
   const w = size === 'sm' ? 'w-[70px]' : 'w-[88px]';
   const h = size === 'sm' ? 'h-[102px]' : 'h-[128px]';
@@ -45,4 +46,4 @@ export function CardItem({ card, onClick, onDoubleClick, size = 'md', selected }
       )}
     </div>
   );
-}
+});
