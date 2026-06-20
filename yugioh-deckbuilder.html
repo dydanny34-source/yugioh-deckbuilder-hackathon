@@ -677,7 +677,7 @@ const API = 'https://db.ygoprodeck.com/api/v7';
 const PAGE_SIZE = 60;
 
 async function apiFetch(params) {
-  const q = new URLSearchParams({ misc: '1', ...params });
+  const q = new URLSearchParams({ misc: 'yes', ...params });
   const res = await fetch(`${API}/cardinfo.php?${q}`);
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));

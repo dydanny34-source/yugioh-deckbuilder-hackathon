@@ -3,7 +3,7 @@ import type { Card, SearchParams } from '../types';
 const BASE = 'https://db.ygoprodeck.com/api/v7';
 
 export async function searchCards(params: SearchParams): Promise<Card[]> {
-  const query = new URLSearchParams({ misc: '1' });
+  const query = new URLSearchParams({ misc: 'yes' });
   if (params.fname) query.set('fname', params.fname);
   if (params.type) query.set('type', params.type);
   if (params.attribute) query.set('attribute', params.attribute);
@@ -26,14 +26,14 @@ export async function searchCards(params: SearchParams): Promise<Card[]> {
 }
 
 export async function getCardById(id: number): Promise<Card> {
-  const res = await fetch(`${BASE}/cardinfo.php?id=${id}&misc=1`);
+  const res = await fetch(`${BASE}/cardinfo.php?id=${id}&misc=yes`);
   if (!res.ok) throw new Error('Card not found');
   const data = await res.json();
   return data.data[0] as Card;
 }
 
 export async function getMetaStaples(): Promise<Card[]> {
-  const res = await fetch(`${BASE}/cardinfo.php?misc=1&staple=yes&sort=views`);
+  const res = await fetch(`${BASE}/cardinfo.php?misc=yes&staple=yes&sort=views`);
   if (!res.ok) throw new Error('Failed to fetch staples');
   const data = await res.json();
   return (data.data as Card[]) ?? [];
