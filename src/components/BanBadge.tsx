@@ -13,7 +13,7 @@ const CONFIG: Record<string, { label: string; cls: string }> = {
 };
 
 export function BanBadge({ status, format }: Props) {
-  const cfg = CONFIG[status ?? 'Unlimited'];
+  const cfg = CONFIG[status ?? 'Unlimited'] ?? CONFIG.Unlimited;
   return (
     <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded ${cfg.cls}`}>
       <span className="uppercase tracking-wider opacity-70">{format}</span>
