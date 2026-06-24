@@ -51,7 +51,7 @@ export interface BanlistInfo {
   ban_goat?: BanStatus;
 }
 
-export type BanStatus = 'Banned' | 'Limited' | 'Semi-Limited' | 'Unlimited';
+export type BanStatus = 'Forbidden' | 'Limited' | 'Semi-Limited' | 'Unlimited';
 
 export interface MiscInfo {
   views?: number;

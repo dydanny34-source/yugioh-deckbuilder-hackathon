@@ -6,7 +6,7 @@ interface Props {
 }
 
 const CONFIG: Record<string, { label: string; cls: string }> = {
-  Banned: { label: 'Banned', cls: 'bg-red-600 text-white' },
+  Forbidden: { label: 'Forbidden', cls: 'bg-red-600 text-white' },
   Limited: { label: 'Limited 1', cls: 'bg-orange-500 text-white' },
   'Semi-Limited': { label: 'Semi-Lim 2', cls: 'bg-yellow-500 text-black' },
   Unlimited: { label: 'Unlimited', cls: 'bg-green-600 text-white' },
