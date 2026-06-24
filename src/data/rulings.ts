@@ -972,6 +972,17 @@ export const RULINGS: Record<string, string[]> = {
     'The hand banish is very powerful — removes key cards before the opponent can use them.',
     'XYZ Summoned using 7 "Purrely" Quick-Play Spells as materials or via Rank-Up.',
   ],
+  'Last Turn': [
+    'BANNED in both TCG and OCG — cannot be used in any official format.',
+    'Selects 1 monster you control; all other cards on your side of the field are sent to the GY.',
+    'The opponent then Special Summons 1 monster of their choice from their Deck to their side of the field.',
+    'A one-on-one Battle Phase is conducted with only those 2 monsters.',
+    'If your selected monster wins that battle, you win the Duel.',
+    'If the selected monster is not face-up on the field at the start of the Battle Phase, both players draw until they have 6 cards in hand instead.',
+    'After Last Turn resolves, neither player can activate any cards or effects until the end of the Battle Phase — this window is non-negotiable.',
+    'The opponent chooses which monster to Special Summon from their Deck, giving them full control over the battle matchup — historically used to counter Last Turn with monsters that cannot be destroyed in battle (e.g. Marshmallon).',
+    'Banned primarily because the opponent\'s free search from Deck generates massive card advantage even on a loss, and certain monsters made the win condition unbeatable.',
+  ],
 };
 
 export function getRulings(cardName: string): string[] {
