@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Loader2, ChevronRight, BookOpen, Zap, ShieldAlert } from 'lucide-react';
 import { SAMPLE_DECKS, type SampleDeckDef } from '../data/sampleDecks';
 import { getCardByName } from '../services/api';
@@ -10,9 +10,15 @@ interface Props {
 }
 
 const DIFF: Record<string, { cls: string; label: string }> = {
-  Beginner:     { cls: 'text-green-400 bg-green-400/10 border-green-400/20',     label: 'Beginner'     },
-  Intermediate: { cls: 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20',  label: 'Intermediate' },
-  Advanced:     { cls: 'text-red-400 bg-red-400/10 border-red-400/20',           label: 'Advanced'     },
+  Beginner:     { cls: 'text-green-400 bg-green-400/10 border-green-400/20',    label: 'Beginner'     },
+  Intermediate: { cls: 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20', label: 'Intermediate' },
+  Advanced:     { cls: 'text-red-400 bg-red-400/10 border-red-400/20',          label: 'Advanced'     },
+};
+
+const FORMAT_LABEL: Record<string, string> = {
+  tcg:  'TCG',
+  ocg:  'OCG',
+  goat: 'GOAT',
 };
 
 function totalCards(deck: SampleDeckDef) {
@@ -24,13 +30,26 @@ function extraCount(deck: SampleDeckDef) {
 }
 
 export function SampleDecksModal({ onClose }: Props) {
-  const [selected, setSelected] = useState<SampleDeckDef>(SAMPLE_DECKS[0]);
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState('');
+  const format       = useDeckStore(s => s.currentDeck.format);
+  const importDeck   = useDeckStore(s => s.importDeck);
+  const currentDeck  = useDeckStore(s => s.currentDeck);
+  const hasCards     = currentDeck.main.length > 0 || currentDeck.extra.length > 0;
 
-  const importDeck = useDeckStore(s => s.importDeck);
-  const currentDeck = useDeckStore(s => s.currentDeck);
-  const hasCards = currentDeck.main.length > 0 || currentDeck.extra.length > 0;
+  const decks = SAMPLE_DECKS.filter(d => d.format === format);
+  const eras  = [...new Set(decks.map(d => d.era))];
+
+  const [selected, setSelected] = useState<SampleDeckDef>(decks[0] ?? SAMPLE_DECKS[0]);
+  const [loading,  setLoading]  = useState(false);
+  const [result,   setResult]   = useState('');
+
+  // Reset selection when the active format changes
+  useEffect(() => {
+    const filtered = SAMPLE_DECKS.filter(d => d.format === format);
+    if (filtered.length > 0 && !filtered.find(d => d.id === selected.id)) {
+      setSelected(filtered[0]);
+      setResult('');
+    }
+  }, [format]);
 
   const selectDeck = (deck: SampleDeckDef) => {
     setSelected(deck);
@@ -44,9 +63,9 @@ export function SampleDecksModal({ onClose }: Props) {
     setResult('');
 
     const allEntries = [
-      ...selected.main.map(e => ({ ...e, zone: 'main' as const })),
+      ...selected.main.map(e  => ({ ...e, zone: 'main'  as const })),
       ...selected.extra.map(e => ({ ...e, zone: 'extra' as const })),
-      ...selected.side.map(e => ({ ...e, zone: 'side' as const })),
+      ...selected.side.map(e  => ({ ...e, zone: 'side'  as const })),
     ];
 
     const fetched = await Promise.all(
@@ -56,7 +75,7 @@ export function SampleDecksModal({ onClose }: Props) {
       })
     );
 
-    const valid = fetched.filter(Boolean) as { card: DeckCard['card']; qty: number; zone: 'main' | 'extra' | 'side' }[];
+    const valid  = fetched.filter(Boolean) as { card: DeckCard['card']; qty: number; zone: 'main' | 'extra' | 'side' }[];
     const failed = allEntries.length - valid.length;
 
     const toDeckCards = (zone: 'main' | 'extra' | 'side'): DeckCard[] =>
@@ -83,33 +102,34 @@ export function SampleDecksModal({ onClose }: Props) {
 
         {/* Left — archetype list */}
         <div className="w-48 shrink-0 border-r border-white/5 overflow-y-auto py-1">
-          {(['Classic', '2024 TCG', '2025 TCG'] as const).map(era => {
-            const group = SAMPLE_DECKS.filter(d => d.era === era);
-            if (group.length === 0) return null;
+          {decks.length === 0 ? (
+            <p className="text-xs text-gray-600 px-3 py-4">No sample decks for {FORMAT_LABEL[format]} format yet.</p>
+          ) : eras.map(era => {
+            const group = decks.filter(d => d.era === era);
             return (
               <div key={era}>
                 <p className="text-[9px] uppercase tracking-widest text-gray-600 px-3 pt-3 pb-1">{era}</p>
                 {group.map(deck => {
-            const active = deck.id === selected.id;
-            return (
-              <button
-                key={deck.id}
-                onClick={() => selectDeck(deck)}
-                className={`w-full text-left px-3 py-2 flex flex-col gap-0.5 transition-colors border-l-2 ${
-                  active
-                    ? 'bg-accent/10 border-accent'
-                    : 'border-transparent hover:bg-white/5'
-                }`}
-              >
-                <span className={`text-xs font-semibold leading-tight ${active ? 'text-accent' : 'text-gray-200'}`}>
-                  {deck.name}
-                </span>
-                <span className="text-[10px] text-gray-500">{deck.playstyle}</span>
-                <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border w-fit mt-0.5 ${DIFF[deck.difficulty].cls}`}>
-                  {deck.difficulty}
-                </span>
-              </button>
-            );
+                  const active = deck.id === selected.id;
+                  return (
+                    <button
+                      key={deck.id}
+                      onClick={() => selectDeck(deck)}
+                      className={`w-full text-left px-3 py-2 flex flex-col gap-0.5 transition-colors border-l-2 ${
+                        active
+                          ? 'bg-accent/10 border-accent'
+                          : 'border-transparent hover:bg-white/5'
+                      }`}
+                    >
+                      <span className={`text-xs font-semibold leading-tight ${active ? 'text-accent' : 'text-gray-200'}`}>
+                        {deck.name}
+                      </span>
+                      <span className="text-[10px] text-gray-500">{deck.playstyle}</span>
+                      <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border w-fit mt-0.5 ${DIFF[deck.difficulty].cls}`}>
+                        {deck.difficulty}
+                      </span>
+                    </button>
+                  );
                 })}
               </div>
             );
@@ -125,11 +145,9 @@ export function SampleDecksModal({ onClose }: Props) {
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="font-bold text-accent text-base">{selected.name}</h2>
                 <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${d.cls}`}>{d.label}</span>
-                {selected.era !== 'Classic' && (
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded border text-purple-400 bg-purple-400/10 border-purple-400/20">
-                    {selected.era}
-                  </span>
-                )}
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded border text-purple-400 bg-purple-400/10 border-purple-400/20">
+                  {selected.era}
+                </span>
               </div>
               <p className="text-xs text-gray-500 mt-0.5">{selected.playstyle}</p>
             </div>
@@ -214,11 +232,11 @@ export function SampleDecksModal({ onClose }: Props) {
 
           {/* Footer */}
           <div className="shrink-0 border-t border-white/5">
-            {selected.era !== 'Classic' && (
-              <p className="text-[10px] text-gray-600 px-5 pt-2">
-                ⚠ Builds reflect the 2024-2025 TCG meta (data through Aug 2025). Ban list and ratios may differ in 2026.
-              </p>
-            )}
+            <p className="text-[10px] text-gray-600 px-5 pt-2">
+              {format === 'goat'
+                ? '⚠ GOAT format uses the April 2005 ban list. Card names must match exactly for API lookup.'
+                : '⚠ Builds reflect the 2024-2025 meta (data through Aug 2025). Ban list and ratios may differ in 2026.'}
+            </p>
             <div className="px-5 py-3 flex items-center gap-3">
               {result && <span className="text-xs text-yellow-400 flex-1">{result}</span>}
               {result && (

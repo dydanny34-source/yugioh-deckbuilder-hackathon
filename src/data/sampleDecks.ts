@@ -3,7 +3,8 @@ export interface SampleDeckDef {
   name: string;
   playstyle: string;
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
-  era: 'Classic' | '2024 TCG' | '2025 TCG';
+  era: string;
+  format: 'tcg' | 'ocg' | 'goat';
   gameplan: string;
   strengths: string[];
   weaknesses: string[];
@@ -13,14 +14,18 @@ export interface SampleDeckDef {
 }
 
 export const SAMPLE_DECKS: SampleDeckDef[] = [
-  // ── CLASSIC ARCHETYPES ────────────────────────────────────────────
+
+  // ════════════════════════════════════════════
+  // TCG — CLASSIC
+  // ════════════════════════════════════════════
 
   {
-    id: 'blue-eyes',
+    id: 'tcg-blue-eyes',
     name: 'Blue-Eyes White Dragon',
     playstyle: 'Synchro / Beatdown',
     difficulty: 'Beginner',
     era: 'Classic',
+    format: 'tcg',
     gameplan:
       'Use The White Stone of Ancients and The Melody of Awakening Dragon to get Blue-Eyes White Dragon to the field fast. Sage with Eyes of Blue sends White Stone to the GY to set up Synchro plays. End on Azure-Eyes Silver Dragon or Blue-Eyes Spirit Dragon for protection, or Blue-Eyes Twin Burst Dragon to swing over anything.',
     strengths: [
@@ -30,8 +35,8 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
       'Multiple recycling loops from the GY',
     ],
     weaknesses: [
-      'Vulnerable to hand traps (Ash Blossom stops White Stone)',
-      'Limited interaction on opponent\'s turn',
+      "Vulnerable to hand traps (Ash Blossom stops White Stone)",
+      "Limited interaction on opponent's turn",
       'Brick-prone — too many Blue-Eyes in hand is slow',
     ],
     main: [
@@ -47,10 +52,10 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
       { name: 'Trade-In', qty: 3 },
       { name: 'Cards of Consonance', qty: 3 },
       { name: "Silver's Cry", qty: 2 },
-      { name: 'Monster Reborn', qty: 1 },         // Limited
+      { name: 'Monster Reborn', qty: 1 },
       { name: 'Ash Blossom & Joyous Spring', qty: 3 },
       { name: 'Effect Veiler', qty: 2 },
-      { name: 'Called by the Grave', qty: 1 },    // Limited
+      { name: 'Called by the Grave', qty: 1 },
       { name: 'Upstart Goblin', qty: 1 },
     ],
     extra: [
@@ -68,11 +73,12 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
   },
 
   {
-    id: 'salamangreat',
+    id: 'tcg-salamangreat',
     name: 'Salamangreat',
     playstyle: 'Aggro / Link Reincarnation',
     difficulty: 'Intermediate',
     era: 'Classic',
+    format: 'tcg',
     gameplan:
       'Salamangreat monsters are Cyberse monsters that thrive on recycling. Use Gazelle + Spinny as your two-card starter: Gazelle sends a Salamangreat from Deck to GY, Spinny Special Summons from GY. Link them into Balelynx to search Sanctuary. Then re-summon Heatleo or Sunlight Wolf using themselves as material ("Reincarnation"), activating powerful bonus effects. Sunlight Wolf reloads your hand each End Phase.',
     strengths: [
@@ -103,7 +109,7 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
       { name: 'Effect Veiler', qty: 2 },
       { name: 'Infinite Impermanence', qty: 2 },
       { name: 'Ghost Ogre & Snow Rabbit', qty: 2 },
-      { name: 'Called by the Grave', qty: 1 },    // Limited
+      { name: 'Called by the Grave', qty: 1 },
     ],
     extra: [
       { name: 'Salamangreat Sunlight Wolf', qty: 3 },
@@ -119,18 +125,19 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
   },
 
   {
-    id: 'eldlich',
+    id: 'tcg-eldlich',
     name: 'Eldlich the Golden Lord',
     playstyle: 'Trap Control / Zombie',
     difficulty: 'Intermediate',
     era: 'Classic',
+    format: 'tcg',
     gameplan:
       'Eldlich the Golden Lord is a self-recurring boss monster immune to card effects (while he has Spell/Trap counters). He can be sent from hand to GY to set an Eldlixir Trap directly. Eldlixirs float into each other, keeping a constant stream of interruptions. The deck wins by grinding opponents out of resources while Eldlich himself keeps returning from the Graveyard.',
     strengths: [
       'Eldlich is nearly unkillable — recurs himself every turn',
       'Strong grind game with constant trap floating',
       'Solemn package provides universal negation',
-      'Very resilient to hand traps since you set up on opponent\'s turn',
+      "Very resilient to hand traps since you set up on opponent's turn",
     ],
     weaknesses: [
       'Slow against turbo combo decks that win before traps can resolve',
@@ -148,13 +155,13 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
       { name: 'Golden Land Forever!', qty: 2 },
       { name: 'Zombie World', qty: 2 },
       { name: 'Solemn Strike', qty: 2 },
-      { name: 'Solemn Judgment', qty: 1 },        // Limited
+      { name: 'Solemn Judgment', qty: 1 },
       { name: 'Solemn Warning', qty: 1 },
       { name: 'Infinite Impermanence', qty: 3 },
       { name: 'Ash Blossom & Joyous Spring', qty: 3 },
       { name: 'Effect Veiler', qty: 2 },
       { name: 'Ghost Ogre & Snow Rabbit', qty: 1 },
-      { name: 'Called by the Grave', qty: 1 },    // Limited
+      { name: 'Called by the Grave', qty: 1 },
       { name: 'Lightning Storm', qty: 1 },
       { name: 'Evenly Matched', qty: 1 },
       { name: 'Pot of Extravagance', qty: 2 },
@@ -171,11 +178,12 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
   },
 
   {
-    id: 'sky-striker',
+    id: 'tcg-sky-striker',
     name: 'Sky Striker',
     playstyle: 'Spell Engine Control',
     difficulty: 'Advanced',
     era: 'Classic',
+    format: 'tcg',
     gameplan:
       'Sky Striker Spells gain bonus effects once you have used 3 or more different Spells in the same turn — most importantly, Engage becomes a searcher+draw. Keep your Main Monster Zone empty to power up your Spell effects. Raye is your only main deck monster; she revives herself as a Sky Striker Ace Link from GY whenever she is used as Link Material. The deck wins by recycling Spells, disrupting with Widow Anchor, and out-resourcing opponents over a long game.',
     strengths: [
@@ -201,16 +209,16 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
       { name: 'Sky Striker Maneuver - Jamming Waves!', qty: 1 },
       { name: 'Pot of Desires', qty: 2 },
       { name: 'Upstart Goblin', qty: 1 },
-      { name: "Harpie's Feather Duster", qty: 1 },  // Limited
+      { name: "Harpie's Feather Duster", qty: 1 },
       { name: 'Forbidden Droplet', qty: 2 },
       { name: 'Dark Ruler No More', qty: 2 },
       { name: 'Lightning Storm', qty: 2 },
       { name: 'Ash Blossom & Joyous Spring', qty: 3 },
       { name: 'Ghost Belle & Haunted Mansion', qty: 2 },
       { name: 'Ghost Ogre & Snow Rabbit', qty: 1 },
-      { name: 'Called by the Grave', qty: 1 },       // Limited
+      { name: 'Called by the Grave', qty: 1 },
       { name: 'Infinite Impermanence', qty: 2 },
-      { name: 'Crossout Designator', qty: 1 },       // Limited
+      { name: 'Crossout Designator', qty: 1 },
     ],
     extra: [
       { name: 'Sky Striker Ace - Shizuku', qty: 3 },
@@ -226,15 +234,16 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
   },
 
   {
-    id: 'branded-despia',
+    id: 'tcg-branded-despia',
     name: 'Branded Despia',
     playstyle: 'Fusion Control',
     difficulty: 'Advanced',
     era: 'Classic',
+    format: 'tcg',
     gameplan:
-      'Fallen of Albaz is the core Fusion engine — he can Fuse using monsters from either side of the field, including the opponent\'s monsters as material. Aluber the Jester of Despia searches any Branded Spell/Trap on Normal Summon. Branded Fusion sends Albaz + Dramaturge from Deck to Fuse during your Main Phase. The ideal endboard includes Mirrorjade the Iceblade Dragon (banishes a monster on opponent\'s turn) backed by Lubellion or Titaniklad as disruption.',
+      "Fallen of Albaz is the core Fusion engine — he can Fuse using monsters from either side of the field, including the opponent's monsters as material. Aluber the Jester of Despia searches any Branded Spell/Trap on Normal Summon. Branded Fusion (Limited to 1) sends Albaz + Dramaturge from Deck to Fuse during your Main Phase. The ideal endboard includes Mirrorjade the Iceblade Dragon (banishes a monster on opponent's turn) backed by Lubellion or Titaniklad as disruption.",
     strengths: [
-      'Mirrorjade is a free pop on the opponent\'s turn that cycles into Albion',
+      "Mirrorjade is a free pop on the opponent's turn that cycles into Albion",
       'Albion recovers Branded Fusion from GY each Standby Phase',
       'Strong Fusion toolbox answers many board states',
       'Ghost Belle and hand traps protect the combo',
@@ -250,7 +259,7 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
       { name: 'Dramaturge of Despia', qty: 3 },
       { name: 'Despian Tragedy', qty: 3 },
       { name: 'Ad Libitum of Despia', qty: 1 },
-      { name: 'Branded Fusion', qty: 1 },          // Limited
+      { name: 'Branded Fusion', qty: 1 },
       { name: 'Branded in Red', qty: 2 },
       { name: 'Branded in White', qty: 1 },
       { name: 'Branded Opening', qty: 2 },
@@ -260,11 +269,11 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
       { name: 'Effect Veiler', qty: 2 },
       { name: 'Infinite Impermanence', qty: 2 },
       { name: 'Ghost Belle & Haunted Mansion', qty: 3 },
-      { name: 'Called by the Grave', qty: 1 },     // Limited
+      { name: 'Called by the Grave', qty: 1 },
       { name: 'Forbidden Droplet', qty: 2 },
       { name: 'Dark Ruler No More', qty: 3 },
       { name: 'Nibiru, the Primal Being', qty: 2 },
-      { name: 'Crossout Designator', qty: 1 },     // Limited
+      { name: 'Crossout Designator', qty: 1 },
     ],
     extra: [
       { name: 'Mirrorjade the Iceblade Dragon', qty: 3 },
@@ -281,19 +290,22 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
     side: [],
   },
 
-  // ── 2024 TCG META DECKS ───────────────────────────────────────────
+  // ════════════════════════════════════════════
+  // TCG — 2024
+  // ════════════════════════════════════════════
 
   {
-    id: 'snake-eye',
+    id: 'tcg-snake-eye',
     name: 'Snake-Eye',
     playstyle: 'FIRE Combo / Going-First',
     difficulty: 'Advanced',
     era: '2024 TCG',
+    format: 'tcg',
     gameplan:
-      'Snake-Eye Ash and Snake-Eye Oak are FIRE monsters that generate card advantage by placing Continuous Spells into the Monster Zone, where they count as FIRE monsters. Bonfire (Limited to 1) searches any FIRE Level 1. Note: Original Sinful Spoils - Snake-Eye is Forbidden in TCG so the deck relies on the monster engine alone. End board targets are S:P Little Knight plus I:P Masquerena for threat removal, backed by going-second board breakers (Dark Ruler No More, Lightning Storm, Nibiru).',
+      'Snake-Eye Ash and Snake-Eye Oak are FIRE monsters that generate card advantage by placing Continuous Spells into the Monster Zone where they count as FIRE monsters. Bonfire (Limited to 1) searches any FIRE Level 1. Original Sinful Spoils is Forbidden in TCG, so the deck relies on the monster engine alone. End board targets are S:P Little Knight plus I:P Masquerena, backed by going-second breakers (Dark Ruler No More, Lightning Storm, Nibiru).',
     strengths: [
-      'Ash and Oak are individually powerful starters even without the Field Spell',
-      'Promethean Princess recycles FIRE monsters from GY during opponent\'s turn',
+      'Ash and Oak are individually powerful starters',
+      'Promethean Princess recycles FIRE monsters during opponent\'s turn',
       'Hiita the Fire Charmer provides additional FIRE engine access',
       'Flexible between going-first combo and going-second break package',
     ],
@@ -306,13 +318,13 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
       { name: 'Snake-Eye Ash', qty: 3 },
       { name: 'Snake-Eye Oak', qty: 3 },
       { name: 'Diabell, Queen of the White Forest', qty: 2 },
-      { name: 'Bonfire', qty: 1 },                // Limited
-      { name: 'Triple Tactics Talent', qty: 1 },  // Limited
+      { name: 'Bonfire', qty: 1 },
+      { name: 'Triple Tactics Talent', qty: 1 },
       { name: 'Ash Blossom & Joyous Spring', qty: 3 },
       { name: 'Infinite Impermanence', qty: 3 },
-      { name: 'Called by the Grave', qty: 1 },    // Limited
+      { name: 'Called by the Grave', qty: 1 },
       { name: 'Ghost Belle & Haunted Mansion', qty: 2 },
-      { name: 'Droll & Lock Bird', qty: 2 },      // Semi-Limited
+      { name: 'Droll & Lock Bird', qty: 2 },
       { name: 'Effect Veiler', qty: 2 },
       { name: 'Ghost Ogre & Snow Rabbit', qty: 3 },
       { name: 'Nibiru, the Primal Being', qty: 3 },
@@ -320,7 +332,7 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
       { name: 'Forbidden Droplet', qty: 1 },
       { name: 'Dark Ruler No More', qty: 3 },
       { name: 'Lightning Storm', qty: 3 },
-      { name: 'Crossout Designator', qty: 1 },    // Limited
+      { name: 'Crossout Designator', qty: 1 },
     ],
     extra: [
       { name: 'I:P Masquerena', qty: 1 },
@@ -343,44 +355,45 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
   },
 
   {
-    id: 'tenpai-dragon',
+    id: 'tcg-tenpai-dragon',
     name: 'Tenpai Dragon',
     playstyle: 'Battle Phase Synchro / OTK',
     difficulty: 'Advanced',
     era: '2024 TCG',
+    format: 'tcg',
     gameplan:
-      'Tenpai Dragon Paidra searches Sangen Summoning on Normal Summon. Chundra (Limited to 1) is the key Level 2 Tuner. During the opponent\'s Battle Phase, Tenpai monsters trigger to Synchro Summon into Sangenpai Transcendent Dragion — a 3500 ATK monster that can attack again, enabling an OTK. Sangen Summoning and Kaimen are both Limited to 1, so use Red-Eyes Darkness Metal Dragon (now Unlimited) to Special Summon monsters and widen your plays. Ghost Ogre disrupts the opponent\'s field while Nibiru punishes long combo strings.',
+      'Tenpai Dragon Paidra searches Sangen Summoning on Normal Summon. Chundra (Limited to 1) is the key Level 2 Tuner. During the opponent\'s Battle Phase, Tenpai monsters trigger to Synchro Summon into Sangenpai Transcendent Dragion — a 3500 ATK monster that can attack again, enabling an OTK. Sangen Summoning and Kaimen are both Limited to 1, so use Red-Eyes Darkness Metal Dragon (now Unlimited) to Special Summon extra monsters and widen your plays.',
     strengths: [
-      'Near-OTK during opponent\'s Battle Phase — almost no counter play',
+      "Near-OTK during opponent's Battle Phase — almost no counter play",
       'Red-Eyes Darkness Metal Dragon is now Unlimited — provides massive extra summons',
-      'Transcendent Dragion\'s double attack closes games from almost any LP total',
+      "Transcendent Dragion's double attack closes games from almost any LP total",
       'Going-second build with full breaker suite pressures any setup',
     ],
     weaknesses: [
       'Chundra, Sangen Summoning and Kaimen are all Limited — forces careful resource management',
       'Weak to Battle Fader and Swift Scarecrow during the OTK window',
-      'Going-first setup is weak — the deck needs the opponent to attack to win',
+      "Going-first setup is weak — the deck needs the opponent to attack to win",
     ],
     main: [
       { name: 'Tenpai Dragon Paidra', qty: 3 },
-      { name: 'Tenpai Dragon Chundra', qty: 1 },  // Limited
+      { name: 'Tenpai Dragon Chundra', qty: 1 },
       { name: 'Tenpai Dragon Fadra', qty: 3 },
-      { name: 'Red-Eyes Darkness Metal Dragon', qty: 3 }, // Now Unlimited
-      { name: 'Sangen Summoning', qty: 1 },       // Limited
-      { name: 'Sangen Kaimen', qty: 1 },           // Limited
-      { name: 'Foolish Burial', qty: 1 },          // Limited
-      { name: 'Monster Reborn', qty: 1 },          // Limited
-      { name: 'Triple Tactics Talent', qty: 1 },   // Limited
+      { name: 'Red-Eyes Darkness Metal Dragon', qty: 3 },
+      { name: 'Sangen Summoning', qty: 1 },
+      { name: 'Sangen Kaimen', qty: 1 },
+      { name: 'Foolish Burial', qty: 1 },
+      { name: 'Monster Reborn', qty: 1 },
+      { name: 'Triple Tactics Talent', qty: 1 },
       { name: 'Ash Blossom & Joyous Spring', qty: 3 },
       { name: 'Effect Veiler', qty: 2 },
       { name: 'Infinite Impermanence', qty: 2 },
       { name: 'Ghost Ogre & Snow Rabbit', qty: 3 },
       { name: 'Nibiru, the Primal Being', qty: 3 },
-      { name: 'Droll & Lock Bird', qty: 2 },       // Semi-Limited (max 2)
+      { name: 'Droll & Lock Bird', qty: 2 },
       { name: 'Pot of Desires', qty: 3 },
       { name: 'Dark Ruler No More', qty: 3 },
       { name: 'Lightning Storm', qty: 3 },
-      { name: 'Crossout Designator', qty: 1 },     // Limited
+      { name: 'Crossout Designator', qty: 1 },
     ],
     extra: [
       { name: 'Sangenpai Transcendent Dragion', qty: 3 },
@@ -399,22 +412,23 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
   },
 
   {
-    id: 'yubel',
+    id: 'tcg-yubel',
     name: 'Yubel',
     playstyle: 'Alternate Win / Going-Second',
     difficulty: 'Advanced',
     era: '2024 TCG',
+    format: 'tcg',
     gameplan:
-      'Yubel takes 0 Battle Damage and redirects all Battle Damage taken to the opponent. Spirit of Yubel (added in Legacy of Destruction 2024) searches Nightmare Throne and turbocharges setup. The deck wins going second: use Lava Golem and The Winged Dragon of Ra - Sphere Mode to tribute the opponent\'s board, then attack with Yubel to redirect all Battle Damage. Into the Void (Limited to 1) rapidly cycles through the deck. Dark Ruler No More and Lightning Storm clear backrow so Yubel can swing freely.',
+      'Yubel takes 0 Battle Damage and redirects all Battle Damage taken to the opponent. Spirit of Yubel (Legacy of Destruction 2024) searches Nightmare Throne and turbocharges setup. The deck wins going second: use Lava Golem and The Winged Dragon of Ra - Sphere Mode to tribute the opponent\'s board, then attack with Yubel to redirect all Battle Damage. Into the Void (Limited to 1) rapidly cycles through the deck.',
     strengths: [
-      'Yubel is almost immune to battle — opponent attacks at their own risk',
+      "Yubel is almost immune to battle — opponent attacks at their own risk",
       'Lava Golem + Ra Sphere Mode clears full boards without targeting or destroying',
-      'Spirit of Yubel makes setup far more consistent than previous formats',
+      'Spirit of Yubel makes setup far more consistent',
       'Wins through alternate damage mechanic — hard to counter with typical disruption',
     ],
     weaknesses: [
       'Loses to non-battle removal (banishing, bounce effects)',
-      'Going-first setup is awkward — purely a going-second strategy',
+      "Going-first setup is awkward — purely a going-second strategy",
       'Into the Void is Limited to 1 — fewer guaranteed hand cycles',
     ],
     main: [
@@ -425,18 +439,18 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
       { name: 'Lava Golem', qty: 2 },
       { name: 'The Winged Dragon of Ra - Sphere Mode', qty: 1 },
       { name: 'Nightmare Throne', qty: 3 },
-      { name: 'Into the Void', qty: 1 },           // Limited
+      { name: 'Into the Void', qty: 1 },
       { name: 'Recurring Nightmare', qty: 2 },
-      { name: 'Triple Tactics Talent', qty: 1 },   // Limited
+      { name: 'Triple Tactics Talent', qty: 1 },
       { name: 'Ash Blossom & Joyous Spring', qty: 3 },
       { name: 'Ghost Ogre & Snow Rabbit', qty: 2 },
       { name: 'Forbidden Droplet', qty: 3 },
       { name: 'Dark Ruler No More', qty: 3 },
       { name: 'Lightning Storm', qty: 3 },
       { name: 'Infinite Impermanence', qty: 3 },
-      { name: 'Droll & Lock Bird', qty: 2 },       // Semi-Limited
-      { name: 'Called by the Grave', qty: 1 },     // Limited
-      { name: 'Crossout Designator', qty: 1 },     // Limited
+      { name: 'Droll & Lock Bird', qty: 2 },
+      { name: 'Called by the Grave', qty: 1 },
+      { name: 'Crossout Designator', qty: 1 },
       { name: 'Pot of Desires', qty: 1 },
       { name: 'Ghost Belle & Haunted Mansion', qty: 1 },
     ],
@@ -456,13 +470,14 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
   },
 
   {
-    id: 'labrynth',
+    id: 'tcg-labrynth',
     name: 'Labrynth',
     playstyle: 'Normal Trap Control',
     difficulty: 'Intermediate',
     era: '2024 TCG',
+    format: 'tcg',
     gameplan:
-      'Lady Labrynth of the Silver Castle Special Summons herself whenever a Normal Trap resolves on the opponent\'s turn and can set another Normal Trap from Deck directly. Arianna the Labrynth Servant searches any Labrynth card on Normal Summon. Big Welcome Labrynth returns a monster to the hand then Special Summons Lady from Deck or GY. Every Trap activation recycles itself through the archetype\'s floating, making the deck nearly inexhaustible.',
+      "Lady Labrynth of the Silver Castle Special Summons herself whenever a Normal Trap resolves on the opponent's turn and can set another Normal Trap from Deck directly. Arianna the Labrynth Servant searches any Labrynth card on Normal Summon. Big Welcome Labrynth returns a monster to the hand then Special Summons Lady from Deck or GY. Every Trap activation recycles itself through the archetype's floating, making the deck nearly inexhaustible.",
     strengths: [
       'Lady is self-recurring and searches another Trap each time she resolves',
       'Every Normal Trap you run has synergy — even generics like Solemn Strike',
@@ -470,7 +485,7 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
       'Difficult to break through a fully set Labrynth board',
     ],
     weaknesses: [
-      'Backrow removal (Harpie\'s Feather Duster, Twin Twisters) is crippling',
+      "Backrow removal (Harpie's Feather Duster, Twin Twisters) is crippling",
       'Slow against turbo combo decks that win before traps can resolve',
       'Cooclock and Arianna are fragile going-second starters',
     ],
@@ -485,14 +500,14 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
       { name: 'Trap Trick', qty: 3 },
       { name: 'Infinite Impermanence', qty: 3 },
       { name: 'Solemn Strike', qty: 2 },
-      { name: 'Solemn Judgment', qty: 1 },         // Limited
+      { name: 'Solemn Judgment', qty: 1 },
       { name: 'Solemn Warning', qty: 1 },
       { name: 'Evenly Matched', qty: 2 },
       { name: 'Ash Blossom & Joyous Spring', qty: 3 },
       { name: 'Effect Veiler', qty: 2 },
       { name: 'Ghost Ogre & Snow Rabbit', qty: 2 },
-      { name: 'Droll & Lock Bird', qty: 2 },       // Semi-Limited
-      { name: 'Called by the Grave', qty: 1 },     // Limited
+      { name: 'Droll & Lock Bird', qty: 2 },
+      { name: 'Called by the Grave', qty: 1 },
       { name: 'Lightning Storm', qty: 1 },
     ],
     extra: [
@@ -511,23 +526,24 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
   },
 
   {
-    id: 'vanquish-soul',
+    id: 'tcg-vanquish-soul',
     name: 'Vanquish Soul',
     playstyle: 'Battle-Phase Beatdown / Control',
     difficulty: 'Intermediate',
     era: '2024 TCG',
+    format: 'tcg',
     gameplan:
-      'Vanquish Soul monsters reveal cards from your hand to activate effects based on the Attributes shown (DARK, FIRE, WIND, EARTH). Caesar Valius searches any Vanquish Soul card on Special Summon. Razen searches on Normal Summon and gains ATK for each Attribute revealed. Stake Your Soul! swaps monsters during the Battle Phase for surprise OTK lines. Pot of Prosperity is Limited to 1, so the deck compensates with Pot of Desires and Ghost Ogre for added consistency.',
+      'Vanquish Soul monsters reveal cards from your hand to activate effects based on the Attributes shown (DARK, FIRE, WIND, EARTH). Caesar Valius searches any Vanquish Soul card on Special Summon. Razen searches on Normal Summon and gains ATK for each Attribute revealed. Stake Your Soul! swaps monsters during the Battle Phase for surprise OTK lines. Pot of Prosperity is Limited to 1, so the deck compensates with Pot of Desires and Ghost Ogre for consistency.',
     strengths: [
       'Caesar Valius searches any piece on Special Summon — draws into the whole deck',
       'Razen can reach enormous ATK by revealing a diverse-Attribute hand',
-      'Battle Phase swapping creates surprise OTK potential opponents can\'t predict',
-      'Resilient to hand traps — effects don\'t start a chain',
+      "Battle Phase swapping creates surprise OTK potential opponents can't predict",
+      "Resilient to hand traps — effects don't start a chain",
     ],
     weaknesses: [
       'Requires a diverse Attribute spread in hand for best effects',
       'Pot of Prosperity is Limited to 1 — less consistent early game',
-      'Limited disruption on the opponent\'s turn compared to other 2024 decks',
+      "Limited disruption on the opponent's turn compared to other 2024 decks",
     ],
     main: [
       { name: 'Vanquish Soul Caesar Valius', qty: 3 },
@@ -537,14 +553,14 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
       { name: 'Vanquish Soul Dr. Mad Love', qty: 2 },
       { name: 'Stake Your Soul!', qty: 3 },
       { name: 'Vanquish Soul Dust Devil', qty: 2 },
-      { name: 'Pot of Prosperity', qty: 1 },       // Limited
-      { name: 'Triple Tactics Talent', qty: 1 },   // Limited
+      { name: 'Pot of Prosperity', qty: 1 },
+      { name: 'Triple Tactics Talent', qty: 1 },
       { name: 'Ash Blossom & Joyous Spring', qty: 3 },
       { name: 'Effect Veiler', qty: 2 },
       { name: 'Infinite Impermanence', qty: 2 },
-      { name: 'Called by the Grave', qty: 1 },     // Limited
+      { name: 'Called by the Grave', qty: 1 },
       { name: 'Ghost Ogre & Snow Rabbit', qty: 2 },
-      { name: 'Droll & Lock Bird', qty: 2 },       // Semi-Limited
+      { name: 'Droll & Lock Bird', qty: 2 },
       { name: 'Nibiru, the Primal Being', qty: 3 },
       { name: 'Pot of Desires', qty: 2 },
       { name: 'Dark Ruler No More', qty: 2 },
@@ -561,6 +577,578 @@ export const SAMPLE_DECKS: SampleDeckDef[] = [
       { name: 'Number 38: Hope Harbinger Dragon Titanic Galaxy', qty: 1 },
       { name: 'Borrelsword Dragon', qty: 1 },
     ],
+    side: [],
+  },
+
+  // ════════════════════════════════════════════
+  // OCG — CLASSIC
+  // ════════════════════════════════════════════
+
+  {
+    id: 'ocg-blue-eyes',
+    name: 'Blue-Eyes White Dragon',
+    playstyle: 'Synchro / Beatdown',
+    difficulty: 'Beginner',
+    era: 'Classic OCG',
+    format: 'ocg',
+    gameplan:
+      'Same core strategy as the TCG version — use White Stone, Melody, and Sage to rapid-deploy Blue-Eyes, then Synchro into Azure-Eyes or Twin Burst. Key OCG difference: Called by the Grave is Forbidden, so Ghost Belle & Haunted Mansion replaces it as GY disruption, protecting your own GY plays from Effect Veiler and Ghost Ogre while also countering opponent GY effects.',
+    strengths: [
+      'Huge ATK overwhelms most boards',
+      'Return of the Dragon Lords gives blanket destruction immunity',
+      'Ghost Belle covers the GY disruption role that Called by the Grave fills in TCG',
+      'Very beginner-friendly linear strategy',
+    ],
+    weaknesses: [
+      'No Called by the Grave means less hand-trap protection for key plays',
+      'Brick-prone — too many Blue-Eyes in hand is slow',
+      "Limited interaction on opponent's turn",
+    ],
+    main: [
+      { name: 'Blue-Eyes White Dragon', qty: 3 },
+      { name: 'Blue-Eyes Alternative White Dragon', qty: 2 },
+      { name: 'The White Stone of Ancients', qty: 3 },
+      { name: 'Dragon Spirit of White', qty: 2 },
+      { name: 'Sage with Eyes of Blue', qty: 3 },
+      { name: 'Bingo Machine, Go!!!', qty: 3 },
+      { name: 'The Melody of Awakening Dragon', qty: 3 },
+      { name: 'Dragon Shrine', qty: 2 },
+      { name: 'Return of the Dragon Lords', qty: 3 },
+      { name: 'Trade-In', qty: 3 },
+      { name: 'Cards of Consonance', qty: 3 },
+      { name: "Silver's Cry", qty: 2 },
+      { name: 'Monster Reborn', qty: 1 },
+      { name: 'Ash Blossom & Joyous Spring', qty: 3 },
+      { name: 'Effect Veiler', qty: 2 },
+      { name: 'Ghost Belle & Haunted Mansion', qty: 1 },
+      { name: 'Upstart Goblin', qty: 1 },
+    ],
+    extra: [
+      { name: 'Blue-Eyes Twin Burst Dragon', qty: 2 },
+      { name: 'Azure-Eyes Silver Dragon', qty: 2 },
+      { name: 'Blue-Eyes Spirit Dragon', qty: 2 },
+      { name: 'Neo Blue-Eyes Ultimate Dragon', qty: 1 },
+      { name: 'Stardust Dragon', qty: 1 },
+      { name: 'Black Rose Dragon', qty: 1 },
+      { name: 'Number 38: Hope Harbinger Dragon Titanic Galaxy', qty: 1 },
+      { name: 'Hieratic Seal of the Heavenly Spheres', qty: 1 },
+      { name: 'Striker Dragon', qty: 1 },
+    ],
+    side: [],
+  },
+
+  {
+    id: 'ocg-dark-magician',
+    name: 'Dark Magician',
+    playstyle: 'Spell-Trap Combo / Fusion',
+    difficulty: 'Intermediate',
+    era: 'Classic OCG',
+    format: 'ocg',
+    gameplan:
+      'Dark Magical Circle banishes a card from the opponent\'s hand, field, or GY when Dark Magician is Special Summoned. Eternal Soul protects him from destruction and can revive him on activation. Magician Navigation is an in-hand Trap that Special Summons Dark Magician plus another DARK Spellcaster at quick speed, creating an instant negation wall. Magicalized Fusion and Secrets of Dark Magic enable Fusion plays for The Dark Magicians and Dark Magician the Dragon Knight.',
+    strengths: [
+      'Dark Magical Circle provides continuous one-for-one removal on every SS',
+      'Navigation creates an in-hand negate that opponents cannot chain through',
+      'Eternal Soul makes the board nearly indestructible by card effects',
+      'Multiple Fusion paths give strong going-first boards',
+    ],
+    weaknesses: [
+      'Called by the Grave is Forbidden in OCG — Magician Navigation is vulnerable to negation',
+      'Dark Magician himself is a 2500 ATK target with no inherent protection without Eternal Soul',
+      'Bricks if key Spell/Trap pieces are drawn in the wrong order',
+    ],
+    main: [
+      { name: 'Dark Magician', qty: 3 },
+      { name: 'Magician of Dark Illusion', qty: 2 },
+      { name: 'Illusion of Chaos', qty: 3 },
+      { name: 'Dark Magician Girl', qty: 1 },
+      { name: 'Ash Blossom & Joyous Spring', qty: 3 },
+      { name: 'Effect Veiler', qty: 2 },
+      { name: 'Dark Magical Circle', qty: 3 },
+      { name: 'Eternal Soul', qty: 3 },
+      { name: 'Magicalized Fusion', qty: 1 },
+      { name: 'Secrets of Dark Magic', qty: 1 },
+      { name: 'Dark Magic Attack', qty: 2 },
+      { name: 'Dark Magic Veil', qty: 2 },
+      { name: 'Dark Burning Magic', qty: 1 },
+      { name: 'Dark Magic Expanded', qty: 2 },
+      { name: 'Pot of Desires', qty: 2 },
+      { name: "Harpie's Feather Duster", qty: 1 },
+      { name: 'Infinite Impermanence', qty: 3 },
+      { name: 'Magician Navigation', qty: 2 },
+      { name: 'Dark Renewal', qty: 1 },
+      { name: 'Solemn Strike', qty: 2 },
+    ],
+    extra: [
+      { name: 'The Dark Magicians', qty: 1 },
+      { name: 'Dark Cavalry', qty: 1 },
+      { name: 'Dark Magician the Dragon Knight', qty: 2 },
+      { name: 'Magician of Chaos', qty: 2 },
+      { name: 'I:P Masquerena', qty: 1 },
+      { name: 'S:P Little Knight', qty: 1 },
+      { name: 'Knightmare Phoenix', qty: 1 },
+      { name: 'Knightmare Unicorn', qty: 1 },
+    ],
+    side: [],
+  },
+
+  // ════════════════════════════════════════════
+  // OCG — 2024
+  // ════════════════════════════════════════════
+
+  {
+    id: 'ocg-snake-eye',
+    name: 'Snake-Eye',
+    playstyle: 'FIRE Combo / Going-First',
+    difficulty: 'Advanced',
+    era: '2024 OCG',
+    format: 'ocg',
+    gameplan:
+      'Same FIRE engine as the TCG build: Snake-Eye Ash and Oak place Continuous Spells as FIRE monsters. Called by the Grave is Forbidden in OCG, so a third copy of Effect Veiler takes its slot — giving more going-first negation that doesn\'t rely on targeting GY cards. Crossout Designator (Limited to 1) still protects the combo from Ash Blossom and Ghost Ogre. End on I:P Masquerena + S:P Little Knight for game-ending removal.',
+    strengths: [
+      'Effect Veiler x3 gives stronger going-first negation than the TCG version',
+      'Ash and Oak are powerful individual starters',
+      'Full going-second breaker package clears any board',
+      'Promethean Princess provides strong midgame recursion',
+    ],
+    weaknesses: [
+      'No Called by the Grave means less GY disruption on the opponent\'s combo turn',
+      'Bonfire is Limited to 1 — opener consistency is slightly lower than peak format',
+      'Ash Blossom on Snake-Eye Ash stops the entire line cold',
+    ],
+    main: [
+      { name: 'Snake-Eye Ash', qty: 3 },
+      { name: 'Snake-Eye Oak', qty: 3 },
+      { name: 'Diabell, Queen of the White Forest', qty: 2 },
+      { name: 'Bonfire', qty: 1 },
+      { name: 'Triple Tactics Talent', qty: 1 },
+      { name: 'Ash Blossom & Joyous Spring', qty: 3 },
+      { name: 'Infinite Impermanence', qty: 3 },
+      { name: 'Ghost Belle & Haunted Mansion', qty: 2 },
+      { name: 'Droll & Lock Bird', qty: 2 },
+      { name: 'Effect Veiler', qty: 3 },
+      { name: 'Ghost Ogre & Snow Rabbit', qty: 3 },
+      { name: 'Nibiru, the Primal Being', qty: 3 },
+      { name: 'Pot of Desires', qty: 3 },
+      { name: 'Forbidden Droplet', qty: 1 },
+      { name: 'Dark Ruler No More', qty: 3 },
+      { name: 'Lightning Storm', qty: 3 },
+      { name: 'Crossout Designator', qty: 1 },
+    ],
+    extra: [
+      { name: 'I:P Masquerena', qty: 1 },
+      { name: 'S:P Little Knight', qty: 1 },
+      { name: 'Relinquished Anima', qty: 1 },
+      { name: 'Accesscode Talker', qty: 1 },
+      { name: 'Promethean Princess, Bestower of Flames', qty: 1 },
+      { name: 'Hiita the Fire Charmer, Ablaze', qty: 1 },
+      { name: 'Knightmare Phoenix', qty: 1 },
+      { name: 'Knightmare Unicorn', qty: 1 },
+      { name: 'Borrelsword Dragon', qty: 1 },
+      { name: 'Cross-Sheep', qty: 1 },
+      { name: 'Salamangreat Almiraj', qty: 1 },
+      { name: 'Divine Arsenal AA-ZEUS - Sky Thunder', qty: 1 },
+      { name: 'Topologic Trisbaena', qty: 1 },
+      { name: 'Knightmare Cerberus', qty: 1 },
+      { name: 'Underworld Goddess of the Closed World', qty: 1 },
+    ],
+    side: [],
+  },
+
+  {
+    id: 'ocg-tenpai-dragon',
+    name: 'Tenpai Dragon',
+    playstyle: 'Battle Phase Synchro / OTK',
+    difficulty: 'Advanced',
+    era: '2024 OCG',
+    format: 'ocg',
+    gameplan:
+      'Identical Battle Phase OTK strategy to the TCG version: Paidra searches Sangen Summoning, Chundra is the Limited Tuner, and Transcendent Dragion double-attacks for the win. In OCG, Called by the Grave is Forbidden — an extra copy of Droll & Lock Bird (Semi-Limited in OCG as well) takes that slot, providing additional disruption against search-heavy opponents while the deck is setting up.',
+    strengths: [
+      "Battle Phase Synchro OTK is almost impossible to stop once it starts",
+      'Red-Eyes Darkness Metal Dragon (Unlimited) provides extra Special Summons',
+      'Ghost Ogre and Nibiru handle opponent setup turns',
+      "Droll & Lock Bird disrupts combo decks that draw heavily into their engines",
+    ],
+    weaknesses: [
+      'Chundra, Sangen Summoning and Kaimen all Limited — same resource crunch as TCG',
+      'No Called by the Grave means slightly less GY disruption on the opponent\'s turn',
+      'Swift Scarecrow and Battle Fader hard-stop the OTK window',
+    ],
+    main: [
+      { name: 'Tenpai Dragon Paidra', qty: 3 },
+      { name: 'Tenpai Dragon Chundra', qty: 1 },
+      { name: 'Tenpai Dragon Fadra', qty: 3 },
+      { name: 'Red-Eyes Darkness Metal Dragon', qty: 3 },
+      { name: 'Sangen Summoning', qty: 1 },
+      { name: 'Sangen Kaimen', qty: 1 },
+      { name: 'Foolish Burial', qty: 1 },
+      { name: 'Monster Reborn', qty: 1 },
+      { name: 'Triple Tactics Talent', qty: 1 },
+      { name: 'Ash Blossom & Joyous Spring', qty: 3 },
+      { name: 'Effect Veiler', qty: 2 },
+      { name: 'Infinite Impermanence', qty: 2 },
+      { name: 'Ghost Ogre & Snow Rabbit', qty: 3 },
+      { name: 'Nibiru, the Primal Being', qty: 3 },
+      { name: 'Droll & Lock Bird', qty: 2 },
+      { name: 'Pot of Desires', qty: 3 },
+      { name: 'Dark Ruler No More', qty: 3 },
+      { name: 'Lightning Storm', qty: 3 },
+      { name: 'Crossout Designator', qty: 1 },
+    ],
+    extra: [
+      { name: 'Sangenpai Transcendent Dragion', qty: 3 },
+      { name: 'Sangenpai Bident Dragion', qty: 3 },
+      { name: 'Shooting Riser Dragon', qty: 1 },
+      { name: 'Coral Dragon', qty: 1 },
+      { name: 'Black Rose Dragon', qty: 1 },
+      { name: 'Borrelsword Dragon', qty: 1 },
+      { name: 'Accesscode Talker', qty: 1 },
+      { name: 'I:P Masquerena', qty: 1 },
+      { name: 'S:P Little Knight', qty: 1 },
+      { name: 'Knightmare Unicorn', qty: 1 },
+      { name: 'Knightmare Phoenix', qty: 1 },
+    ],
+    side: [],
+  },
+
+  {
+    id: 'ocg-labrynth',
+    name: 'Labrynth',
+    playstyle: 'Normal Trap Control',
+    difficulty: 'Intermediate',
+    era: '2024 OCG',
+    format: 'ocg',
+    gameplan:
+      "Lady Labrynth plus Big Welcome Labrynth is the same self-recurring Trap engine as the TCG version. In OCG, Called by the Grave is Forbidden so Ghost Ogre & Snow Rabbit fills that slot — it disrupts the opponent's searches and Spell/Trap activations while being chainable to Lady's effect to protect key moments. The third Ghost Ogre also applies pressure against any deck that relies on Field Spells or activated effects.",
+    strengths: [
+      'Lady is self-recurring — every Normal Trap trigger is a plus',
+      'Ghost Ogre x3 covers the disruption gap left by no Called by the Grave',
+      'Solemn package provides hard negation across all card types',
+      'Extremely resilient grind game',
+    ],
+    weaknesses: [
+      "Backrow removal (Harpie's Feather Duster) is still crippling",
+      'No Called by the Grave makes protecting key combo turns harder',
+      'Slow against turbo combo decks that can OTK before traps resolve',
+    ],
+    main: [
+      { name: 'Lady Labrynth of the Silver Castle', qty: 2 },
+      { name: 'Arianna the Labrynth Servant', qty: 3 },
+      { name: 'Ariane the Labrynth Servant', qty: 2 },
+      { name: 'Labrynth Cooclock', qty: 2 },
+      { name: 'Labrynth Labyrinth', qty: 3 },
+      { name: 'Big Welcome Labrynth', qty: 3 },
+      { name: 'Welcome Labrynth', qty: 2 },
+      { name: 'Trap Trick', qty: 3 },
+      { name: 'Infinite Impermanence', qty: 3 },
+      { name: 'Solemn Strike', qty: 2 },
+      { name: 'Solemn Judgment', qty: 1 },
+      { name: 'Solemn Warning', qty: 1 },
+      { name: 'Evenly Matched', qty: 2 },
+      { name: 'Ash Blossom & Joyous Spring', qty: 3 },
+      { name: 'Effect Veiler', qty: 2 },
+      { name: 'Ghost Ogre & Snow Rabbit', qty: 3 },
+      { name: 'Droll & Lock Bird', qty: 2 },
+      { name: 'Lightning Storm', qty: 1 },
+    ],
+    extra: [
+      { name: 'Knightmare Unicorn', qty: 1 },
+      { name: 'Knightmare Phoenix', qty: 1 },
+      { name: 'I:P Masquerena', qty: 1 },
+      { name: 'S:P Little Knight', qty: 1 },
+      { name: 'Underworld Goddess of the Closed World', qty: 1 },
+      { name: 'Accesscode Talker', qty: 1 },
+      { name: 'Divine Arsenal AA-ZEUS - Sky Thunder', qty: 1 },
+      { name: 'Number 38: Hope Harbinger Dragon Titanic Galaxy', qty: 1 },
+      { name: 'Borrelsword Dragon', qty: 1 },
+      { name: 'Knightmare Cerberus', qty: 1 },
+    ],
+    side: [],
+  },
+
+  // ════════════════════════════════════════════
+  // GOAT FORMAT — 2005
+  // ════════════════════════════════════════════
+
+  {
+    id: 'goat-goat-control',
+    name: 'Goat Control',
+    playstyle: 'Scapegoat Combo / Control',
+    difficulty: 'Advanced',
+    era: '2005 GOAT',
+    format: 'goat',
+    gameplan:
+      'The defining GOAT deck. Scapegoat creates four Level 1 Sheep Tokens; Metamorphosis tributes one token to Special Summon Thousand-Eyes Restrict from the Extra Deck — a monster that negates all other monsters\' attacks and absorbs one enemy monster. Tsukuyomi returns it face-down to reuse each turn. Magician of Faith retrieves spent Limited Spells. The deck wins by locking the opponent out of all aggression while grinding card advantage.',
+    strengths: [
+      'Thousand-Eyes Restrict shuts down almost any battle-based strategy',
+      'Tsukuyomi + T-Eyes is a repeatable lock that generates perpetual advantage',
+      'Magician of Faith recycles Pot of Greed, Graceful Charity, and Snatch Steal endlessly',
+      'Extremely flexible — can switch between aggression and stall mid-game',
+    ],
+    weaknesses: [
+      'Loses to Royal Decree (negates all your Traps)',
+      'Heavy Storm blows up your set Scapegoat and Metamorphosis',
+      'Graveyard disruption (D.D. Crow) breaks the Magician of Faith loop',
+    ],
+    main: [
+      { name: 'Tsukuyomi', qty: 1 },
+      { name: 'Magician of Faith', qty: 1 },
+      { name: 'Sangan', qty: 1 },
+      { name: 'Sinister Serpent', qty: 1 },
+      { name: 'D.D. Warrior Lady', qty: 3 },
+      { name: 'Night Assailant', qty: 1 },
+      { name: 'Spirit Reaper', qty: 2 },
+      { name: 'Breaker the Magical Warrior', qty: 1 },
+      { name: 'Pot of Greed', qty: 1 },
+      { name: 'Graceful Charity', qty: 1 },
+      { name: 'Premature Burial', qty: 1 },
+      { name: 'Monster Reborn', qty: 1 },
+      { name: 'Snatch Steal', qty: 1 },
+      { name: 'Heavy Storm', qty: 1 },
+      { name: 'Mystical Space Typhoon', qty: 1 },
+      { name: 'Book of Moon', qty: 2 },
+      { name: 'Scapegoat', qty: 3 },
+      { name: 'Metamorphosis', qty: 3 },
+      { name: 'Nobleman of Crossout', qty: 2 },
+      { name: 'Smashing Ground', qty: 2 },
+      { name: 'Mirror Force', qty: 1 },
+      { name: 'Torrential Tribute', qty: 1 },
+      { name: 'Ring of Destruction', qty: 1 },
+      { name: 'Dust Tornado', qty: 2 },
+      { name: 'Call of the Haunted', qty: 2 },
+      { name: 'Waboku', qty: 2 },
+      { name: 'Sakuretsu Armor', qty: 1 },
+    ],
+    extra: [
+      { name: 'Thousand-Eyes Restrict', qty: 1 },
+      { name: 'Dark Balter the Terrible', qty: 1 },
+      { name: 'Reaper on the Nightmare', qty: 1 },
+      { name: 'Ryu Senshi', qty: 1 },
+      { name: 'King Dragun', qty: 1 },
+    ],
+    side: [],
+  },
+
+  {
+    id: 'goat-warrior-toolbox',
+    name: 'Warrior Toolbox',
+    playstyle: 'Aggro / Search Engine',
+    difficulty: 'Intermediate',
+    era: '2005 GOAT',
+    format: 'goat',
+    gameplan:
+      'Reinforcement of the Army searches any Level 4 or lower Warrior from the Deck on demand. The "toolbox" refers to the wide variety of Warriors with situational effects — D.D. Warrior Lady removes the attacker it battles, Don Zaloog discards from the opponent\'s hand, Exiled Force destroys any monster as a cost (ignoring targeting), and Mystic Swordsman LV2 destroys face-down monsters without flipping them. Together they answer any board state.',
+    strengths: [
+      'Reinforcement of the Army gives guaranteed access to the right tool for any situation',
+      "D.D. Warrior Lady removes monsters the opponent's other effects can't retrieve",
+      'Exiled Force answers indestructible monsters without targeting',
+      'Very aggressive — consistent early damage while disrupting opponent resources',
+    ],
+    weaknesses: [
+      'Low DEF walls — vulnerable to Spirit Reaper and flip-effect stall strategies',
+      'No built-in draw engine — relies on Limited draw Spells (Pot of Greed, Graceful Charity)',
+      'Weak to Thousand-Eyes Restrict absorbing your Warriors',
+    ],
+    main: [
+      { name: 'Don Zaloog', qty: 2 },
+      { name: 'D.D. Warrior Lady', qty: 3 },
+      { name: 'Blade Knight', qty: 2 },
+      { name: 'Mystic Swordsman LV2', qty: 2 },
+      { name: 'Mystic Swordsman LV4', qty: 1 },
+      { name: 'Exiled Force', qty: 1 },
+      { name: 'Sangan', qty: 1 },
+      { name: 'Sinister Serpent', qty: 1 },
+      { name: 'Magician of Faith', qty: 1 },
+      { name: 'Breaker the Magical Warrior', qty: 1 },
+      { name: 'Night Assailant', qty: 1 },
+      { name: 'Injection Fairy Lily', qty: 1 },
+      { name: 'Reinforcement of the Army', qty: 2 },
+      { name: 'Pot of Greed', qty: 1 },
+      { name: 'Graceful Charity', qty: 1 },
+      { name: 'Premature Burial', qty: 1 },
+      { name: 'Monster Reborn', qty: 1 },
+      { name: 'Snatch Steal', qty: 1 },
+      { name: 'Heavy Storm', qty: 1 },
+      { name: 'Mystical Space Typhoon', qty: 1 },
+      { name: 'Book of Moon', qty: 2 },
+      { name: 'Nobleman of Crossout', qty: 2 },
+      { name: 'Sakuretsu Armor', qty: 3 },
+      { name: 'Mirror Force', qty: 1 },
+      { name: 'Torrential Tribute', qty: 1 },
+      { name: 'Ring of Destruction', qty: 1 },
+      { name: 'Call of the Haunted', qty: 2 },
+      { name: 'Dust Tornado', qty: 2 },
+    ],
+    extra: [
+      { name: 'Ryu Senshi', qty: 1 },
+      { name: 'Thousand-Eyes Restrict', qty: 1 },
+      { name: 'Dark Balter the Terrible', qty: 1 },
+      { name: 'King Dragun', qty: 1 },
+      { name: 'Cyber Blader', qty: 1 },
+    ],
+    side: [],
+  },
+
+  {
+    id: 'goat-chaos-monarch',
+    name: 'Chaos Monarch',
+    playstyle: 'Tribute Summon / Chaos Control',
+    difficulty: 'Advanced',
+    era: '2005 GOAT',
+    format: 'goat',
+    gameplan:
+      'Black Luster Soldier - Envoy of the Beginning is the crown jewel — banish one LIGHT and one DARK from your GY to Special Summon this 3000 ATK monster that can banish two monsters per turn. Feed the GY using Graceful Charity, Magician of Faith, and Tsukuyomi. Monarch monsters (Mobius, Thestalos, Zaborg) punish the opponent\'s setups on Normal Summon while generating advantage. Chaos Sorcerer provides an additional 2300 ATK chaos body that banishes a face-up card.',
+    strengths: [
+      'Black Luster Soldier — Envoy is the single most powerful card in GOAT format',
+      'Monarchs clear the opponent\'s board on Tribute Summon at no additional cost',
+      'Chaos Sorcerer provides a second powerful attacker with removal',
+      'Self-sustaining GY loop fuels Chaos requirements every turn',
+    ],
+    weaknesses: [
+      'BLS is Limited to 1 — drawing it in the opening hand is wasted if GY isn\'t set up',
+      'Tribute Summons require minion monsters, creating sequencing demands',
+      'D.D. Warrior Lady banishing your LIGHT/DARK monsters cuts off Chaos access',
+    ],
+    main: [
+      { name: 'Black Luster Soldier - Envoy of the Beginning', qty: 1 },
+      { name: 'Chaos Sorcerer', qty: 2 },
+      { name: 'Mobius the Frost Monarch', qty: 2 },
+      { name: 'Thestalos the Firestorm Monarch', qty: 2 },
+      { name: 'Zaborg the Thunder Monarch', qty: 1 },
+      { name: 'D.D. Warrior Lady', qty: 2 },
+      { name: 'Sangan', qty: 1 },
+      { name: 'Tsukuyomi', qty: 1 },
+      { name: 'Magician of Faith', qty: 1 },
+      { name: 'Sinister Serpent', qty: 1 },
+      { name: 'Morphing Jar', qty: 1 },
+      { name: 'Night Assailant', qty: 1 },
+      { name: 'Spirit Reaper', qty: 1 },
+      { name: 'Exiled Force', qty: 1 },
+      { name: 'Pot of Greed', qty: 1 },
+      { name: 'Graceful Charity', qty: 1 },
+      { name: 'Premature Burial', qty: 1 },
+      { name: 'Monster Reborn', qty: 1 },
+      { name: 'Snatch Steal', qty: 1 },
+      { name: 'Heavy Storm', qty: 1 },
+      { name: 'Mystical Space Typhoon', qty: 1 },
+      { name: 'Book of Moon', qty: 2 },
+      { name: 'Nobleman of Crossout', qty: 2 },
+      { name: 'Smashing Ground', qty: 2 },
+      { name: 'Sakuretsu Armor', qty: 3 },
+      { name: 'Mirror Force', qty: 1 },
+      { name: 'Torrential Tribute', qty: 1 },
+      { name: 'Ring of Destruction', qty: 1 },
+      { name: 'Dust Tornado', qty: 2 },
+      { name: 'Call of the Haunted', qty: 1 },
+    ],
+    extra: [
+      { name: 'Thousand-Eyes Restrict', qty: 1 },
+      { name: 'Dark Balter the Terrible', qty: 1 },
+      { name: 'King Dragun', qty: 1 },
+      { name: 'Gatling Dragon', qty: 1 },
+      { name: 'Reaper on the Nightmare', qty: 1 },
+    ],
+    side: [],
+  },
+
+  {
+    id: "goat-gravekeeper",
+    name: "Gravekeeper's Control",
+    playstyle: 'Field Spell Lock / Control',
+    difficulty: 'Intermediate',
+    era: '2005 GOAT',
+    format: 'goat',
+    gameplan:
+      "Necrovalley is a Field Spell that prevents all GY manipulation — cards cannot be moved from the GY, and Gravekeeper's monsters gain 500 ATK/DEF while it is active. This shuts down the staple GOAT engine: Magician of Faith cannot retrieve Spells, Sinister Serpent cannot return to hand, and Premature Burial/Call of the Haunted cannot target the GY. Royal Tribute strips the opponent's entire hand of monsters before they can play. Gravekeeper's Spy chains off itself to flood the board for free.",
+    strengths: [
+      'Necrovalley single-handedly disables the core GOAT engine (Sinister Serpent, Faith, Premature)',
+      'Royal Tribute empties the opponent\'s hand of all monsters if Necrovalley is active',
+      "Gravekeeper's Spy creates a free wall that searches more Spies — infinite ATK wall chain",
+      'Consistent board presence through Assailant + Guard flip interactions',
+    ],
+    weaknesses: [
+      'Heavy Storm or Mystical Space Typhoon destroys Necrovalley, removing the entire advantage',
+      'Necrovalley also locks your own GY — you cannot use Premature Burial or Monster Reborn',
+      'Low ATK outside of Necrovalley makes the deck vulnerable in mirror or blind matches',
+    ],
+    main: [
+      { name: "Gravekeeper's Spy", qty: 3 },
+      { name: "Gravekeeper's Assailant", qty: 3 },
+      { name: "Gravekeeper's Guard", qty: 3 },
+      { name: "Gravekeeper's Chief", qty: 1 },
+      { name: "Gravekeeper's Spear Soldier", qty: 2 },
+      { name: 'Sangan', qty: 1 },
+      { name: 'Magician of Faith', qty: 1 },
+      { name: 'Sinister Serpent', qty: 1 },
+      { name: 'Necrovalley', qty: 3 },
+      { name: 'Royal Tribute', qty: 2 },
+      { name: 'Pot of Greed', qty: 1 },
+      { name: 'Graceful Charity', qty: 1 },
+      { name: 'Premature Burial', qty: 1 },
+      { name: 'Monster Reborn', qty: 1 },
+      { name: 'Snatch Steal', qty: 1 },
+      { name: 'Heavy Storm', qty: 1 },
+      { name: 'Mystical Space Typhoon', qty: 1 },
+      { name: 'Book of Moon', qty: 2 },
+      { name: 'Nobleman of Crossout', qty: 1 },
+      { name: 'Sakuretsu Armor', qty: 3 },
+      { name: 'Mirror Force', qty: 1 },
+      { name: 'Torrential Tribute', qty: 1 },
+      { name: 'Ring of Destruction', qty: 1 },
+      { name: 'Dust Tornado', qty: 2 },
+      { name: 'Call of the Haunted', qty: 2 },
+    ],
+    extra: [
+      { name: 'Thousand-Eyes Restrict', qty: 1 },
+      { name: 'Dark Balter the Terrible', qty: 1 },
+    ],
+    side: [],
+  },
+
+  {
+    id: 'goat-burn-stall',
+    name: 'Burn Stall',
+    playstyle: 'Damage / Stall',
+    difficulty: 'Beginner',
+    era: '2005 GOAT',
+    format: 'goat',
+    gameplan:
+      'Win by dealing burn damage rather than attacking. Gravity Bind prevents all Level 4 or higher monsters from attacking. Level Limit - Area B changes all Level 4+ monsters to DEF position. Lava Golem is Special Summoned to the opponent\'s side of the field using two of their monsters as tribute — it then deals 1000 damage to them every Standby Phase. Wave-Motion Cannon accumulates counters and can be sent to deal 1000 damage per counter at any time. Scapegoat provides expendable blockers.',
+    strengths: [
+      'Lava Golem removes two opponent monsters AND deals recurring damage passively',
+      'Gravity Bind + Level Limit locks out virtually every normal attacker',
+      'Wave-Motion Cannon is game-ending if left unchecked for 5+ turns',
+      'Very low-skill floor — easy to pilot for new players',
+    ],
+    weaknesses: [
+      'Heavy Storm + Mystical Space Typhoon clears Gravity Bind and Level Limit immediately',
+      'Spirit Reaper ignores Gravity Bind (it is Level 3)',
+      'Slow — loses to OTK builds or decks with built-in burn of their own',
+    ],
+    main: [
+      { name: 'Lava Golem', qty: 2 },
+      { name: 'Giant Germ', qty: 3 },
+      { name: 'Nimble Momonga', qty: 3 },
+      { name: 'Sangan', qty: 1 },
+      { name: 'Wave-Motion Cannon', qty: 3 },
+      { name: 'Pot of Greed', qty: 1 },
+      { name: 'Graceful Charity', qty: 1 },
+      { name: 'Premature Burial', qty: 1 },
+      { name: 'Heavy Storm', qty: 1 },
+      { name: 'Mystical Space Typhoon', qty: 1 },
+      { name: 'Level Limit - Area B', qty: 3 },
+      { name: 'Scapegoat', qty: 3 },
+      { name: 'Swords of Revealing Light', qty: 2 },
+      { name: 'Book of Moon', qty: 2 },
+      { name: 'Gravity Bind', qty: 3 },
+      { name: 'Waboku', qty: 3 },
+      { name: 'Threatening Roar', qty: 3 },
+      { name: 'Just Desserts', qty: 2 },
+      { name: 'Ring of Destruction', qty: 1 },
+      { name: 'Torrential Tribute', qty: 1 },
+    ],
+    extra: [],
     side: [],
   },
 ];
