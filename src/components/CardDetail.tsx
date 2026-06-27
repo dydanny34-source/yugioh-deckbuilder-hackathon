@@ -130,9 +130,7 @@ export function CardDetail({ card, format, onClose }: Props) {
           <div className="flex flex-wrap gap-1.5">
             <BanBadge status={card.banlist_info?.ban_tcg ?? 'Unlimited'} format="TCG" />
             <BanBadge status={card.banlist_info?.ban_ocg ?? 'Unlimited'} format="OCG" />
-            {card.banlist_info?.ban_goat && (
-              <BanBadge status={card.banlist_info.ban_goat} format="GOAT" />
-            )}
+            <BanBadge status={card.banlist_info?.ban_goat ?? 'Unlimited'} format="GOAT" />
           </div>
         </div>
 
