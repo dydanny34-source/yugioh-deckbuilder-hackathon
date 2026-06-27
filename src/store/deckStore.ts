@@ -11,7 +11,11 @@ export function isExtraDeck(card: Card): boolean {
 
 function maxCopies(card: Card, format: Format): number {
   const ban = card.banlist_info;
-  const status = format === 'tcg' ? ban?.ban_tcg : format === 'ocg' ? ban?.ban_ocg : ban?.ban_goat;
+  let status = format === 'tcg' ? ban?.ban_tcg : format === 'ocg' ? ban?.ban_ocg : ban?.ban_goat;
+  if (format === 'goat' && !status) {
+    const tcgDate = card.misc_info?.[0]?.tcg_date;
+    if (tcgDate && tcgDate > '2005-04-01') status = 'Forbidden';
+  }
   if (status === 'Forbidden') return 0;
   if (status === 'Limited') return 1;
   if (status === 'Semi-Limited') return 2;

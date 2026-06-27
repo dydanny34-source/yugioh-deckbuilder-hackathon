@@ -1,5 +1,5 @@
 import { ExternalLink, X, Star, BookOpen, TrendingUp } from 'lucide-react';
-import type { Card, Format } from '../types';
+import type { BanStatus, Card, Format } from '../types';
 import { BanBadge } from './BanBadge';
 import { getRulings, getMetaUsage, calcPopularity } from '../data/rulings';
 import { useDeckStore } from '../store/deckStore';
@@ -35,6 +35,13 @@ function StatBar({ label, value, max }: { label: string; value: number; max: num
       <span className="text-xs font-mono text-gray-300 w-10 text-right">{value}</span>
     </div>
   );
+}
+
+function goatStatus(card: Card): BanStatus {
+  if (card.banlist_info?.ban_goat) return card.banlist_info.ban_goat;
+  const tcgDate = card.misc_info?.[0]?.tcg_date;
+  if (tcgDate && tcgDate > '2005-04-01') return 'Forbidden';
+  return 'Unlimited';
 }
 
 export function CardDetail({ card, format, onClose }: Props) {
@@ -130,7 +137,7 @@ export function CardDetail({ card, format, onClose }: Props) {
           <div className="flex flex-wrap gap-1.5">
             <BanBadge status={card.banlist_info?.ban_tcg ?? 'Unlimited'} format="TCG" />
             <BanBadge status={card.banlist_info?.ban_ocg ?? 'Unlimited'} format="OCG" />
-            <BanBadge status={card.banlist_info?.ban_goat ?? 'Unlimited'} format="GOAT" />
+            <BanBadge status={goatStatus(card)} format="GOAT" />
           </div>
         </div>
 
