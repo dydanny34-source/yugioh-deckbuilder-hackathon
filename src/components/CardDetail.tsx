@@ -38,8 +38,14 @@ function StatBar({ label, value, max }: { label: string; value: number; max: num
 }
 
 export function CardDetail({ card, format, onClose }: Props) {
-  const addCard = useDeckStore(s => s.addCard);
+  const addCard    = useDeckStore(s => s.addCard);
+  const removeCard = useDeckStore(s => s.removeCard);
+  const currentDeck = useDeckStore(s => s.currentDeck);
   const rulings = getRulings(card.name);
+
+  const deckEntry = (['main', 'extra', 'side'] as const)
+    .map(zone => ({ zone, dc: currentDeck[zone].find(dc => dc.card.id === card.id) }))
+    .find(e => e.dc);
   const meta = getMetaUsage(card.name);
   const misc = card.misc_info?.[0];
   const popularity = calcPopularity(misc?.viewsweek);
@@ -221,14 +227,23 @@ export function CardDetail({ card, format, onClose }: Props) {
         )}
       </div>
 
-      {/* Add to deck button */}
-      <div className="shrink-0 p-3 border-t border-white/5">
+      {/* Add / Remove buttons */}
+      <div className="shrink-0 p-3 border-t border-white/5 flex gap-2">
         <button
           onClick={handleAdd}
-          className="w-full bg-accent hover:bg-yellow-400 text-black font-bold text-sm py-2 rounded transition-colors"
+          className="flex-1 bg-accent hover:bg-yellow-400 text-black font-bold text-sm py-2 rounded transition-colors"
         >
           + Add to Deck
         </button>
+        {deckEntry && (
+          <button
+            onClick={() => removeCard(card.id, deckEntry.zone)}
+            className="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold text-sm py-2 rounded transition-colors"
+            title={`Remove one copy from ${deckEntry.zone} deck`}
+          >
+            − Remove ({deckEntry.dc!.qty} in {deckEntry.zone})
+          </button>
+        )}
       </div>
     </div>
   );
